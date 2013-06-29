@@ -5,8 +5,7 @@ object Build extends Build {
 
   type Settings = Seq[Setting[_]]
 
-  def project(id: String, base: String)
-             (settings: Settings = Seq()): Project =
+  def project(id: String, base: String, settings: Settings = Seq()): Project =
     Project(
       id = id, 
       base = file(base),
@@ -18,6 +17,10 @@ object Build extends Build {
       ) ++ settings
     )
 
-  lazy val root = project("root", ".") { Seq() }
+  lazy val root = project("root", ".") aggregate geometry
+
+  lazy val geometry = project("geometry", "geometry")
+
+  lazy val jogl = project("jogl", "jogl")
 
 }
