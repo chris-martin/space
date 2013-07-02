@@ -62,3 +62,7 @@ object Scalar {
   implicit object ImplicitBigDecimalIsScalar extends BigDecimalIsScalar
 
 }
+
+trait ImplicitScalar[S] {
+  implicit def scalar: Scalar[S]
+}

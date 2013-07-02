@@ -3,9 +3,7 @@ package dimension2
 
 /** A point in the Euclidean plane.
   */
-trait Vector[S] {
-
-  implicit def scalar: Scalar[S]
+trait Vector[S] extends ImplicitScalar[S] {
 
   def x: S
   def y: S
