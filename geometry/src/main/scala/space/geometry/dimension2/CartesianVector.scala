@@ -3,21 +3,14 @@ package dimension2
 
 /** A two-dimensional vector defined by X and Y coordinates.
   */
-sealed class CartesianVector[Scalar: IsScalar](
-  val x: Scalar, val y: Scalar,
-  private var magnitudeOption: Option[Scalar] = None
-) extends Vector[Scalar] {
+sealed class CartesianVector[Scalar: IsScalar](val x: Scalar, val y: Scalar) extends Vector[Scalar] {
 
   private val isScalar = implicitly[IsScalar[Scalar]]
   import isScalar._
 
   def xy: CartesianVector[Scalar] = this
 
-  /** This result is memoized (its computation cost is incurred at most once).
-    */
-  override def magnitude: Scalar = magnitudeOption.getOrElse {
-    (x.square + y.square).squareRoot K { m => magnitudeOption = Some(m) }
-  }
+  override def magnitude: Scalar = (x.square + y.square).squareRoot
 
   override def unary_- : CartesianVector[Scalar] = CartesianVector ( -x, -y )
 
