@@ -21,6 +21,9 @@ trait IsScalar[Scalar] {
   implicit def mkFractionalOps(a: Scalar): fractional.FractionalOps =
     fractional.mkNumericOps(a)
 
+  def zero = fractional.one
+  def one = fractional.one
+
 }
 
 object IsScalar {
