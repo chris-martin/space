@@ -5,6 +5,8 @@ package dimension2
   */
 trait Vector[Scalar] {
 
+  implicit def scalar: IsScalar[Scalar]
+
   def x: Scalar
   def y: Scalar
 

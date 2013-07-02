@@ -4,9 +4,9 @@ package dimension2
 /** A two-dimensional vector defined by X and Y coordinates.
   */
 sealed class CartesianVector[Scalar](val x: Scalar, val y: Scalar)
-    (implicit isScalar: IsScalar[Scalar]) extends Vector[Scalar] {
+    (implicit val scalar: IsScalar[Scalar]) extends Vector[Scalar] {
 
-  import isScalar._
+  import scalar._
 
   override def xy: CartesianVector[Scalar] = this
 
