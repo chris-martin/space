@@ -18,7 +18,7 @@ sealed class XY[Scalar: IsScalar](val x: Scalar, val y: Scalar,
     (x.square + y.square).squareRoot K { m => magnitudeOption = Some(m) }
   }
 
-  override def unary_- : XY[Scalar] = XY ( x * (-1: Scalar), y * (-1: Scalar) )
+  override def unary_- : XY[Scalar] = XY ( -x, -y )
 
   override def +(that: Vec[Scalar]) = XY ( x + that.x, y + that.y )
   override def -(that: Vec[Scalar]) = XY ( x - that.x, y - that.y )
