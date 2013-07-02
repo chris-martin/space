@@ -3,22 +3,22 @@ package dimension2
 
 /** A point in the Euclidean plane.
   */
-trait Vector[Scalar] {
+trait Vector[S] {
 
-  implicit def scalar: IsScalar[Scalar]
+  implicit def scalar: Scalar[S]
 
-  def x: Scalar
-  def y: Scalar
+  def x: S
+  def y: S
 
-  def toCartesian: CartesianVector[Scalar] = CartesianVector[Scalar](x, y)
+  def toCartesian: CartesianVector[S] = CartesianVector[S](x, y)
 
-  def magnitude: Scalar
-  def unary_- : Vector[Scalar]
+  def magnitude: S
+  def unary_- : Vector[S]
 
-  def +(that: Vector[Scalar]): Vector[Scalar]
-  def -(that: Vector[Scalar]): Vector[Scalar]
+  def +(that: Vector[S]): Vector[S]
+  def -(that: Vector[S]): Vector[S]
 
-  def *(s: Scalar): Vector[Scalar]
-  def /(s: Scalar): Vector[Scalar]
+  def *(s: S): Vector[S]
+  def /(s: S): Vector[S]
 
 }
