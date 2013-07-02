@@ -5,7 +5,7 @@ package dimension2
   */
 sealed class XY[Scalar: IsScalar](val x: Scalar, val y: Scalar,
     private var magnitudeOption: Option[Scalar] = None
-  ) extends Vec[Scalar] {
+  ) extends Vector[Scalar] {
 
   private val isScalar = implicitly[IsScalar[Scalar]]
   import isScalar._
@@ -20,15 +20,15 @@ sealed class XY[Scalar: IsScalar](val x: Scalar, val y: Scalar,
 
   override def unary_- : XY[Scalar] = XY ( -x, -y )
 
-  override def +(that: Vec[Scalar]) = XY ( x + that.x, y + that.y )
-  override def -(that: Vec[Scalar]) = XY ( x - that.x, y - that.y )
+  override def +(that: Vector[Scalar]) = XY ( x + that.x, y + that.y )
+  override def -(that: Vector[Scalar]) = XY ( x - that.x, y - that.y )
 
   def *(s: Scalar): XY[Scalar] = new XY ( x*s, y*s )
   def /(s: Scalar): XY[Scalar] = new XY ( x/s, y/s )
 
   override def equals(obj: Any): Boolean = obj match {
     case that: AnyRef if this eq that => true
-    case that: Vec[_] => x == that.x && y == that.y
+    case that: Vector[_] => x == that.x && y == that.y
     case _ => false
   }
 
