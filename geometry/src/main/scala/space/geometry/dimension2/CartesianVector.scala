@@ -8,7 +8,7 @@ sealed class CartesianVector[Scalar](val x: Scalar, val y: Scalar)
 
   import isScalar._
 
-  def xy: CartesianVector[Scalar] = this
+  override def xy: CartesianVector[Scalar] = this
 
   override def magnitude: Scalar = (x.square + y.square).squareRoot
 
@@ -17,8 +17,8 @@ sealed class CartesianVector[Scalar](val x: Scalar, val y: Scalar)
   override def +(that: Vector[Scalar]) = CartesianVector ( x + that.x, y + that.y )
   override def -(that: Vector[Scalar]) = CartesianVector ( x - that.x, y - that.y )
 
-  def *(s: Scalar): CartesianVector[Scalar] = new CartesianVector ( x*s, y*s )
-  def /(s: Scalar): CartesianVector[Scalar] = new CartesianVector ( x/s, y/s )
+  override def *(s: Scalar): CartesianVector[Scalar] = new CartesianVector ( x*s, y*s )
+  override def /(s: Scalar): CartesianVector[Scalar] = new CartesianVector ( x/s, y/s )
 
   override def equals(obj: Any): Boolean = obj match {
     case that: AnyRef if this eq that => true
