@@ -7,7 +7,7 @@ object Build extends Build {
 
   def project(id: String, base: String, settings: Settings = Seq()): Project =
     Project(
-      id = id, 
+      id = id,
       base = file(base),
       settings = Project.defaultSettings ++ Seq(
         scalaVersion := "2.10.2",
