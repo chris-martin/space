@@ -10,7 +10,7 @@ trait Vector[Scalar] {
   def x: Scalar
   def y: Scalar
 
-  def xy: CartesianVector[Scalar]
+  def xy: CartesianVector[Scalar] = CartesianVector[Scalar](x, y)
 
   def magnitude: Scalar
   def unary_- : Vector[Scalar]
