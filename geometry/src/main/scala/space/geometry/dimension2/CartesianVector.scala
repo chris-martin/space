@@ -8,7 +8,7 @@ sealed class CartesianVector[Scalar](val x: Scalar, val y: Scalar)
 
   import scalar._
 
-  override def xy: CartesianVector[Scalar] = this
+  override def toCartesian: CartesianVector[Scalar] = this
 
   override def magnitude: Scalar = (x.square + y.square).squareRoot
 
