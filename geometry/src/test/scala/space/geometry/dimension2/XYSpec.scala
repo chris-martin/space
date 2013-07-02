@@ -33,8 +33,16 @@ class XYSpec extends FunSpec {
   }
 
   describe("XY addition") {
-    it ("works with Floats")  { def F = XY[Float](_, _); assert ( F(3, 4) + F(30, 40) === F(33, 44) ) }
-    it ("works with Doubles") { def D = XY[Float](_, _); assert ( D(3, 4) + D(30, 40) === D(33, 44) ) }
+
+    it ("works with Floats")  {
+      def F = XY[Float](_, _)
+      assert ( F(3, 4) + F(30, 40) === F(33, 44) )
+    }
+
+    it ("works with Doubles") {
+      def D = XY[Float](_, _)
+      assert ( D(3, 4) + D(30, 40) === D(33, 44) )
+    }
   }
 
 }
