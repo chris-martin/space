@@ -22,7 +22,7 @@ sealed class CartesianVector[Scalar](val x: Scalar, val y: Scalar)
 
   override def equals(obj: Any): Boolean = obj match {
     case that: AnyRef if this eq that => true
-    case that: Vector[_] => x == that.x && y == that.y
+    case that: CartesianVector[_] => x == that.x && y == that.y
     case _ => false
   }
 
