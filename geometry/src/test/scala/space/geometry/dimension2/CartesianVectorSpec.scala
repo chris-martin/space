@@ -4,9 +4,9 @@ import org.scalatest._
 
 class CartesianVectorSpec extends FunSpec {
 
-  describe("CartesianVector[Double](3, 4)") {
+  describe("CartesianVector(3, 4)") {
 
-    def v(x: Double, y: Double): CartesianVector[Double] = CartesianVector(x, y)
+    val v = CartesianVector(_, _)
 
     val a = v(3, 4)
 

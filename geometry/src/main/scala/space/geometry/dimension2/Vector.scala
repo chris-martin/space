@@ -3,20 +3,20 @@ package dimension2
 
 /** A point in the Euclidean plane.
   */
-trait Vector[S] extends ImplicitScalar[S] {
+trait Vector {
 
-  def x: S
-  def y: S
+  def x: Double
+  def y: Double
 
-  def toCartesian: CartesianVector[S] = CartesianVector[S](x, y)
+  def toCartesian: CartesianVector = CartesianVector(x, y)
 
-  def magnitude: S
-  def unary_- : Vector[S]
+  def magnitude: Double
+  def unary_- : Vector
 
-  def +(that: Vector[S]): Vector[S]
-  def -(that: Vector[S]): Vector[S]
+  def +(that: Vector): Vector
+  def -(that: Vector): Vector
 
-  def *(s: S): Vector[S]
-  def /(s: S): Vector[S]
+  def *(s: Double): Vector
+  def /(s: Double): Vector
 
 }

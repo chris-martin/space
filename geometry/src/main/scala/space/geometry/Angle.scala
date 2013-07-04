@@ -2,10 +2,10 @@ package space.geometry
 
 import math.Pi
 
-trait Angle[S] extends ImplicitScalar[S] {
+trait Angle {
 
-  def toRadians: Radians[S]
-  def toDegrees: Degrees[S]
+  def toRadians: Radians
+  def toDegrees: Degrees
 
   /** An equivalent angle between -Pi and Pi radians.
     */
@@ -19,12 +19,10 @@ object Angle {
 
 }
 
-case class Radians[S](x: S)(implicit val scalar: Scalar[S]) extends Angle[S] {
+case class Radians(x: Double) extends Angle {
 
-  import scalar._
-
-  override def toRadians: Radians[S] = this
-  override def toDegrees: Degrees[S] = Degrees(x * Angle.degreesPerRadian)
+  override def toRadians: Radians = this
+  override def toDegrees: Degrees = Degrees(x * Angle.degreesPerRadian)
 
   override def normalize = ???
 
@@ -33,12 +31,10 @@ case class Radians[S](x: S)(implicit val scalar: Scalar[S]) extends Angle[S] {
 /**
  * @param x radian value in the range [ -180, 180 ]
  */
-case class Degrees[S](x: S)(implicit val scalar: Scalar[S]) extends Angle[S] {
+case class Degrees(x: Double) extends Angle {
 
-  import scalar._
-
-  override def toRadians: Radians[S] = Radians(x * Angle.radiansPerDegree)
-  override def toDegrees: Degrees[S] = this
+  override def toRadians: Radians = Radians(x * Angle.radiansPerDegree)
+  override def toDegrees: Degrees = this
 
   override def normalize = ???
 
