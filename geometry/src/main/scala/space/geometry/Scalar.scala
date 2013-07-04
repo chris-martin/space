@@ -60,19 +60,6 @@ object Scalar {
 
   implicit object ImplicitDoubleIsScalar extends DoubleIsScalar
 
-  trait BigDecimalIsScalar extends Scalar[BigDecimal] {
-
-    override def fromNumeric[N](x: N)(implicit numeric: Numeric[N]) =
-      BigDecimal(numeric.mkNumericOps(x).toDouble())
-
-    override protected val fractional = implicitly[Fractional[BigDecimal]]
-
-    override def remainder(a: BigDecimal, b: BigDecimal) = a % b
-
-  }
-
-  implicit object ImplicitBigDecimalIsScalar extends BigDecimalIsScalar
-
 }
 
 trait ImplicitScalar[S] {
