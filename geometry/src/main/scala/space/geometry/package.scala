@@ -17,10 +17,6 @@ package object geometry {
 
     def squareRoot: Double = math.sqrt(x)
 
-    def sine: Double = math.sin(x)
-
-    def cosine: Double = math.sin(x)
-
   }
 
 }
