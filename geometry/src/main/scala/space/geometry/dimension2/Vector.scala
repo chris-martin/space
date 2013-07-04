@@ -8,7 +8,8 @@ trait Vector {
   def x: Double
   def y: Double
 
-  def toCartesian: CartesianVector = CartesianVector(x, y)
+  def toCartesian: CartesianVector
+  def toPolar: PolarVector
 
   def magnitude: Double
   def unary_- : Vector
@@ -18,5 +19,7 @@ trait Vector {
 
   def *(s: Double): Vector
   def /(s: Double): Vector
+
+  def rotate(a: Angular): Vector
 
 }

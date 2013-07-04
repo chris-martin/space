@@ -1,4 +1,5 @@
-package space.geometry.dimension2
+package space.geometry
+package dimension2
 
 import org.scalatest.FunSpec
 
@@ -6,22 +7,22 @@ import math.Pi
 
 class AngularSpec extends FunSpec {
 
-  describe("Angle(Pi/4)") {
+  describe("An Angle") {
 
     val a = Angle(Pi/4)
 
-    it ("equals Angle(Pi / 4)") { assert ( a == Angle(Pi/4) ) }
-    it ("equals Angle(9 Pi / 4)") { assert ( a == Angle(9*Pi/4) ) }
-    it ("equals Angle(-7 Pi / 4)") { assert ( a == Angle(-7*Pi/4) ) }
-    it ("does not equal Angle(Pi / 8)") { assert ( a != Angle(Pi/8) ) }
+    it ("equals an identical angle") { assert ( a == Angle(Pi/4) ) }
+    it ("equals itself plus 2 Pi") { assert ( a == a + Angle(2*Pi) ) }
+    it ("equals itself minus 2 Pi") { assert ( a == a - Angle(2*Pi) ) }
+    it ("does not equal a different angle") { assert ( a != Angle(Pi/8) ) }
   }
 
-  describe("Radians(Pi/4)") {
+  describe("A Radians") {
 
     val a = Radians(Pi/4)
 
-    it ("equals Radians(Pi / 4)") { assert ( a == Radians(Pi/4) ) }
-    it ("does not equal Angle(9 Pi / 4)") { assert ( a != Radians(9*Pi/4) ) }
+    it ("equals an identical radians") { assert ( a == Radians(Pi/4) ) }
+    it ("does not equal itself plus 2 Pi") { assert ( a != a + Radians(2*Pi) ) }
   }
 
 }

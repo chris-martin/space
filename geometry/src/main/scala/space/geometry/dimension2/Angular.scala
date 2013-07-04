@@ -1,18 +1,25 @@
-package space.geometry.dimension2
+package space.geometry
+package dimension2
 
 import math.Pi
 
-sealed trait Angular[A <: Angular[A]] extends Any {
+sealed trait Angular extends Any {
 
   def toDouble: Double
 
   def sine: Double = math.sin(toDouble)
   def cosine: Double = math.cos(toDouble)
 
+}
+
+sealed trait TypedAngular[A] extends Any {
+
+  def toDouble: Double
+
   protected def companion: AngularCompanion[A]
 
-  def +(that: A): A = companion(toDouble + that.toDouble)
-  def -(that: A): A = companion(toDouble - that.toDouble)
+  def +(that: Angular): A = companion(toDouble + that.toDouble)
+  def -(that: Angular): A = companion(toDouble - that.toDouble)
 
   def *(s: Double): A = companion(toDouble * s)
   def /(s: Double): A = companion(toDouble / s)
@@ -27,7 +34,7 @@ sealed trait AngularCompanion[T] {
 
 }
 
-class Radians (val toDouble: Double) extends AnyVal with Angular[Radians] {
+class Radians (val toDouble: Double) extends AnyVal with Angular with TypedAngular[Radians] {
   override protected def companion: AngularCompanion[Radians] = Radians
 }
 
@@ -38,7 +45,7 @@ object Radians extends AngularCompanion[Radians] {
 /**
  * @param toDouble in the range (-Pi, Pi]
  */
-class Angle private (val toDouble: Double) extends AnyVal with Angular[Angle] {
+class Angle private (val toDouble: Double) extends AnyVal with Angular with TypedAngular[Angle] {
   override protected def companion: AngularCompanion[Angle] = Angle
 }
 
