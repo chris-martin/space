@@ -43,7 +43,7 @@ object Radians extends AngularCompanion[Radians] {
 }
 
 /**
- * @param toDouble in the range (-Pi, Pi]
+ * @param toDouble in the range [-Pi, Pi)
  */
 class Angle private (val toDouble: Double) extends AnyVal with Angular with TypedAngular[Angle] {
   override protected def companion: AngularCompanion[Angle] = Angle
@@ -57,12 +57,34 @@ object Angle extends AngularCompanion[Angle] {
 
   override def apply(a: Double): Angle = new Angle(
     a % twoPi match {
-      case b if b >   Pi => b - twoPi
-      case b if b <= -Pi => b + twoPi
-      case b             => b
+      case b  if b >= Pi  =>  b - twoPi
+      case b  if b < -Pi  =>  b + twoPi
+      case b              =>  b
     }
   )
 
   def apply(x: Double, y: Double): Angle = new Angle(math.atan2(y, x))
+
+}
+
+/**
+ * @param toDouble in the range [0, Pi)
+ */
+class PositiveAngle private (val toDouble: Double) extends AnyVal with Angular with TypedAngular[PositiveAngle] {
+  override protected def companion: AngularCompanion[PositiveAngle] = PositiveAngle
+}
+
+object PositiveAngle extends AngularCompanion[PositiveAngle] {
+
+  import math.Pi
+
+  override def apply(a: Double): PositiveAngle = new PositiveAngle(
+    a % Pi match {
+      case b  if b < 0  => b + Pi
+      case b            => b
+    }
+  )
+
+  def apply(x: Double, y: Double): PositiveAngle = PositiveAngle(math.atan2(y, x))
 
 }
