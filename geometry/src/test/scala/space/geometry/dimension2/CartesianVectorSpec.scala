@@ -13,6 +13,7 @@ class CartesianVectorSpec extends FunSpec with NearEqualityTesting {
     it ("equals an identical cartesian vector") { assert ( a =~ v(3, 4) ) }
     it ("does not equal a vector with a different X") { assert ( a !=~ v(30, 4) ) }
     it ("does not equal a vector with a different Y") { assert ( a !=~ v(3, 40) ) }
+
     it ("calculates its magnitude") { assert ( a.magnitude =~ 5 ) }
     it ("can be negated") { assert ( -a =~ v(-3, -4) ) }
     it ("can be added to another cartesian vector") { assert ( a + v(1, 3) =~ v(4, 7) ) }
