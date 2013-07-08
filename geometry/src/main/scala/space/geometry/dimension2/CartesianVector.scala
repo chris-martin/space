@@ -12,12 +12,12 @@ sealed case class CartesianVector(x: Double, y: Double) extends Vector {
 
   override def unary_- : CartesianVector = CartesianVector ( -x, -y )
 
-  override def +(that: Vector) = CartesianVector ( x + that.x, y + that.y )
-  override def -(that: Vector) = CartesianVector ( x - that.x, y - that.y )
+  override def +(that: Vector): CartesianVector = CartesianVector ( x + that.x, y + that.y )
+  override def -(that: Vector): CartesianVector = CartesianVector ( x - that.x, y - that.y )
 
   override def *(s: Double): CartesianVector = new CartesianVector ( x*s, y*s )
   override def /(s: Double): CartesianVector = new CartesianVector ( x/s, y/s )
 
-  override def rotate(a: Angular) = toPolar.rotate(a)
+  override def rotate(a: Angular): PolarVector = toPolar.rotate(a)
 
 }
