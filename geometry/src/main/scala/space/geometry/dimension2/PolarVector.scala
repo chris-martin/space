@@ -3,20 +3,20 @@ package dimension2
 
 case class PolarVector(magnitude: Double, angle: Angle) extends Vector {
 
-  def toPolar = this
-  def toCartesian: CartesianVector = CartesianVector(x, y)
+  override def toPolar = this
+  override def toCartesian: CartesianVector = CartesianVector(x, y)
 
-  def x = magnitude * angle.cosine
-  def y = magnitude * angle.sine
+  override def x = magnitude * angle.cosine
+  override def y = magnitude * angle.sine
 
-  def unary_- : PolarVector = PolarVector(magnitude, angle + Angle.halfCircle)
+  override def unary_- : PolarVector = PolarVector(magnitude, angle + Angle.halfCircle)
 
-  def +(that: Vector): CartesianVector = toCartesian + that
-  def -(that: Vector): CartesianVector = toCartesian - that
+  override def +(that: Vector): CartesianVector = toCartesian + that
+  override def -(that: Vector): CartesianVector = toCartesian - that
 
-  def *(s: Double) = PolarVector(magnitude * s, angle)
-  def /(s: Double) = PolarVector(magnitude / s, angle)
+  override def *(s: Double) = PolarVector(magnitude * s, angle)
+  override def /(s: Double) = PolarVector(magnitude / s, angle)
 
-  def rotate(a: Angular) = PolarVector(magnitude, angle + a)
+  override def rotate(a: Angular) = PolarVector(magnitude, angle + a)
 
 }
