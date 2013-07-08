@@ -5,7 +5,7 @@ import org.scalatest.FunSpec
 
 import math.Pi
 
-class AngularSpec extends FunSpec {
+class AngularSpec extends FunSpec with NearEqualityTesting {
 
   describe("An Angle") {
 

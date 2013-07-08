@@ -19,4 +19,8 @@ package object geometry {
 
   }
 
+  implicit object ScalarDistance extends Distance[Double] {
+    override def distance(a: Double, b: Double) = (a-b).abs
+  }
+
 }
