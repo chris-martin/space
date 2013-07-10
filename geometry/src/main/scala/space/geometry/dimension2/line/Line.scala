@@ -1,6 +1,6 @@
 package space.geometry
 package dimension2
-package set
+package line
 
 import vector._
 import angle._
