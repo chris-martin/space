@@ -1,6 +1,8 @@
-package space.geometry.dimension2
+package space.geometry
+package dimension2
 
 import angle._
+import vector._
 
 trait Line {
 

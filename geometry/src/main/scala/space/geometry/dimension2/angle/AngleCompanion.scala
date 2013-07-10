@@ -1,4 +1,6 @@
-package space.geometry.dimension2.angle
+package space.geometry
+package dimension2
+package angle
 
 trait AngleCompanion[A] {
 

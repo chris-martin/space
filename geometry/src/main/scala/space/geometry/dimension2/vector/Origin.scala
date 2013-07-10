@@ -1,4 +1,6 @@
-package space.geometry.dimension2
+package space.geometry
+package dimension2
+package vector
 
 import angle._
 

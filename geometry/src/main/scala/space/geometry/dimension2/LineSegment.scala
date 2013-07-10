@@ -1,4 +1,7 @@
-package space.geometry.dimension2
+package space.geometry
+package dimension2
+
+import vector._
 
 trait LineSegment {
 
