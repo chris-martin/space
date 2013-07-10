@@ -9,9 +9,10 @@ import angle._
 sealed case class CartesianVector(x: Double, y: Double) extends Vector {
 
   override def toCartesian: CartesianVector = this
-  override def toPolar: PolarVector = PolarVector(magnitude, CircleRadians(x=x, y=y))
+  override def toPolar: PolarVector = PolarVector(magnitude, angle)
 
   override def magnitude: Double = (x.square + y.square).squareRoot
+  override def angle: CircleRadians = CircleRadians(x=x, y=y)
 
   override def unary_- : CartesianVector = CartesianVector ( -x, -y )
 

@@ -13,6 +13,7 @@ object Origin extends Vector {
   override def toPolar: PolarVector = PolarVector(0, CircleRadians(0))
 
   override def magnitude: Double = 0
+  override def angle = Angle(0)
 
   override def unary_- : this.type = this
 

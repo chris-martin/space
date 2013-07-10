@@ -4,15 +4,22 @@ package angle
 
 class SemicircleRadiansSpec extends org.scalatest.FunSpec with NearEqualityTesting {
 
-  describe("A SemicircleRadians") {
+  val a = SemicircleRadians(Pi/4)
 
-    val a = SemicircleRadians(Pi/4)
+  it ("It equals an identical SemicircleRadians.") {
+    assert ( a =~ SemicircleRadians(Pi/4) )
+  }
 
-    it ("equals an identical angle") { assert ( a =~ SemicircleRadians(Pi/4) ) }
-    it ("does not equal a different angle") { assert ( a !=~ SemicircleRadians(Pi/8) ) }
+  it ("It does not equal a different SemicircleRadians.") {
+    assert ( a !=~ SemicircleRadians(Pi/8) )
+  }
 
-    it ("equals itself plus a half circle") { assert ( a =~ a + Angle.halfCircle ) }
-    it ("equals itself minus a half circle") { assert ( a =~ a - Angle.halfCircle ) }
+  it ("It equals itself plus a half circle.") {
+    assert ( a =~ a + Angle.halfCircle )
+  }
+
+  it ("It equals itself minus a half circle.") {
+    assert ( a =~ a - Angle.halfCircle )
   }
 
 }

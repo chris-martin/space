@@ -7,19 +7,40 @@ import angle._
 
 class PolarVectorSpec extends org.scalatest.FunSpec with NearEqualityTesting {
 
-  describe("A PolarVector") {
+  val v = PolarVector(_, _)
 
-    val v = PolarVector(_, _)
-    val a = v(2.squareRoot, CircleRadians(Pi/4))
+  it ("It equals an identical polar vector.") {
+    val m = 2.squareRoot
+    val a = Angle(Pi/4)
+    assert ( v(m, a) =~ v(m, a) )
+  }
 
-    it ("equals an identical polar vector") { assert ( a =~ v(2.squareRoot, CircleRadians(Pi/4)) ) }
-    it ("equals itself rotated by 2 Pi") { assert ( a =~ a.rotate(ArbitraryRadians(2*Pi)) ) }
-    it ("does not equal a polar vector with a different magnitude") { assert ( a !=~ v(2, CircleRadians(Pi/4)) ) }
-    it ("does not equal a polar vector with a different angle") { assert ( a !=~ v(2.squareRoot, CircleRadians(Pi/3)) ) }
+  it ("It equals itself rotated by 2 Pi.") {
+    val x = v(2.squareRoot, Angle(Pi/4))
+    assert ( x =~ x.rotate(Angle(2*Pi)) )
+  }
 
-    it ("calculates its X value") { assert ( a.x =~ 1 ) }
-    it ("calculates its Y value") { assert ( a.y =~ 1 ) }
-    it ("can be negated") { assert ( -a =~ v(2.squareRoot, CircleRadians(-3*Pi/4)) ) }
+  it ("It does not equal a polar vector with a different magnitude") {
+    val a = Angle(Pi/4)
+    assert ( v(1, a) !=~ v(2, a) )
+  }
+
+  it ("It does not equal a polar vector with a different angle") {
+    val m = 2.squareRoot
+    assert ( v(m, Angle(Pi/4)) !=~ v(m, Angle(Pi/3)) )
+  }
+
+  it ("It calculates its X value.") {
+    assert ( v(2.squareRoot, Angle(Pi/4)).x =~ 1 )
+  }
+
+  it ("It calculates its Y value.") {
+    assert ( v(2.squareRoot, Angle(Pi/4)).y =~ 1 )
+  }
+
+  it ("It can be negated.") {
+    val m = 2.squareRoot
+    assert ( -v(m, Angle(Pi/4)) =~ v(m, Angle(-3*Pi/4)) )
   }
 
 }

@@ -15,6 +15,8 @@ trait Vector {
   def toPolar: PolarVector
 
   def magnitude: Double
+  def angle: CircleRadians
+
   def unary_- : Vector
 
   def +(that: Vector): Vector
