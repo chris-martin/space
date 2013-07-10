@@ -1,7 +1,9 @@
 package space.geometry
 package dimension2
 
-case class PolarVector(magnitude: Double, angle: Angle) extends Vector {
+import angle._
+
+case class PolarVector(magnitude: Double, angle: CircleRadians) extends Vector {
 
   override def toPolar: PolarVector = this
   override def toCartesian: CartesianVector = CartesianVector(x, y)
@@ -17,6 +19,6 @@ case class PolarVector(magnitude: Double, angle: Angle) extends Vector {
   override def *(s: Double): PolarVector = PolarVector(magnitude * s, angle)
   override def /(s: Double): PolarVector = PolarVector(magnitude / s, angle)
 
-  override def rotate(a: Angular): PolarVector = PolarVector(magnitude, angle + a)
+  override def rotate(a: CircleRadians): PolarVector = PolarVector(magnitude, angle + a)
 
 }

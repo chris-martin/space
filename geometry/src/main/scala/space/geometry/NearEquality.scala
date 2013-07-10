@@ -2,10 +2,10 @@ package space.geometry
 
 class NearEquality(val Ɛ: Double) {
 
-  def nearEqual[V: Distance](left: V, right: V): Boolean =
-    implicitly[Distance[V]].distance(left, right) < Ɛ
+  def nearEqual[V: ScalarDifference](left: V, right: V): Boolean =
+    implicitly[ScalarDifference[V]].distance(left, right) < Ɛ
 
-  implicit class RichVector[V: Distance](left: V) {
+  implicit class RichVector[V: ScalarDifference](left: V) {
     def =~(right: V): Boolean = nearEqual(left, right)
     def !=~(right: V): Boolean = !nearEqual(left, right)
   }

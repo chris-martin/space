@@ -1,9 +1,7 @@
 package space.geometry
 package dimension2
 
-import org.scalatest._
-
-class CartesianVectorSpec extends FunSpec with NearEqualityTesting {
+class CartesianVectorSpec extends org.scalatest.FunSpec with NearEqualityTesting {
 
   describe("A CartesianVector") {
 

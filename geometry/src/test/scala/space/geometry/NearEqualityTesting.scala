@@ -8,7 +8,7 @@ trait NearEqualityTesting {
   def ?[A](ok: Boolean, ifNot: => A): Option[A] =
     if (ok) None else Some(ifNot)
 
-  implicit class ApproximateEqualizer[V: Distance](left: V) {
+  implicit class ApproximateEqualizer[V: ScalarDifference](left: V) {
 
     def =~(right: V): Option[String] =
       ?(nearEqual(left, right), "%s did not equal %s" format (left, right))

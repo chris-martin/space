@@ -1,6 +1,8 @@
 package space.geometry
 package dimension2
 
+import angle._
+
 /** A point in the Euclidean plane.
   */
 trait Vector {
@@ -20,6 +22,6 @@ trait Vector {
   def *(s: Double): Vector
   def /(s: Double): Vector
 
-  def rotate(a: Angular): Vector
+  def rotate(a: CircleRadians): Vector
 
 }
