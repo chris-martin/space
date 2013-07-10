@@ -1,4 +1,8 @@
-package space.geometry.dimension2.circle
+package space.geometry
+package dimension2
+package circle
+
+import vector._
 
 sealed case class TriangleCircle(a: Vector, b: Vector, c: Vector) extends Circle {
 
