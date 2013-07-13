@@ -64,6 +64,8 @@ object ArbitraryRadians extends ArbitraryRadiansCompanion {
 class CircleRadians private (val toDouble: Double)
   extends AnyVal with Angle[CircleRadians] {
 
+  def sign: Sign = if (toDouble > 0) Positive else Negative
+
   override protected def companion: AngleCompanion[CircleRadians] = CircleRadians
 
   override def toString = "CircleRadians(%f)" format toDouble
