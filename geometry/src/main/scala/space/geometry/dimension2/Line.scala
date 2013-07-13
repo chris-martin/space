@@ -5,7 +5,6 @@ package dimension2
   */
 trait Line {
   def angle: SemicircleRadians
-  def intersects(that: Line): Boolean = angle != that.angle
 }
 
 /**     ●--●
