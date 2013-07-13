@@ -1,9 +1,5 @@
 package space.geometry
 package dimension2
-package line
-
-import angle._
-import vector._
 
 class TwoPointLineSpec extends org.scalatest.FunSpec with NearEqualityTesting {
 

@@ -1,6 +1,5 @@
 package space.geometry
 package dimension2
-package angle
 
 class SemicircleRadiansSpec extends org.scalatest.FunSpec with NearEqualityTesting {
 

@@ -1,22 +1,22 @@
 package space.geometry
-package dimension2
 
-/**
- * Implicit conversions between angle types are defined only when the conversion imposes a restriction
- * on the angle's range. Conversions that lift a restriction are not done implicitly, because the result
- * would be ambiguous (for example, Pi/4 semicircle radians could be converted to either  Pi/4 or -Pi/4
- * circle radians, so there is no implicit semicircle-to-circle conversion).
- */
-package object angle {
+package object dimension2 {
 
-  private[angle] val Pi = math.Pi
-  private[angle] val twoPi = 2 * Pi
+  implicit object VectorDistance extends ScalarDifference[Vector] {
+
+    override def distance(a: Vector, b: Vector) =
+      (a - b).magnitude
+
+  }
 
   implicit class Dimension2Double(x: Double) {
     def radians: ArbitraryRadians = ArbitraryRadians(x)
   }
 
-  // implicit conversions between angle types
+  // Implicit conversions between angle types are defined only when the conversion imposes a restriction
+  // on the angle's range. Conversions that lift a restriction are not done implicitly, because the result
+  // would be ambiguous (for example, Pi/4 semicircle radians could be converted to either  Pi/4 or -Pi/4
+  // circle radians, so there is no implicit semicircle-to-circle conversion).
 
   implicit def circleToSemicircle(x: CircleRadians): SemicircleRadians =
     SemicircleRadians(x.toDouble)

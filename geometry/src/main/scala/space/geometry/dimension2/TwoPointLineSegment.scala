@@ -1,8 +1,5 @@
 package space.geometry
 package dimension2
-package line
-
-import vector._
 
 sealed case class TwoPointLineSegment(a: Vector, b: Vector) extends LineSegment {
 

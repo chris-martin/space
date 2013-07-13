@@ -1,9 +1,5 @@
 package space.geometry
 package dimension2
-package vector
-
-import math.Pi
-import angle._
 
 class PolarVectorSpec extends org.scalatest.FunSpec with NearEqualityTesting {
 

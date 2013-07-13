@@ -1,6 +1,5 @@
 package space.geometry
 package dimension2
-package angle
 
 /** @param toDouble in the range [-Pi, Pi)
   */

@@ -1,6 +1,5 @@
 package space.geometry
 package dimension2
-package angle
 
 class ArbitraryRadians (val toDouble: Double)
     extends AnyVal with Angle[ArbitraryRadians] {

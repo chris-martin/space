@@ -1,8 +1,5 @@
 package space.geometry
 package dimension2
-package line
-
-import vector._
 
 class TwoPointLineSegmentSpec extends org.scalatest.FunSpec with NearEqualityTesting {
 

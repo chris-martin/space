@@ -1,8 +1,5 @@
 package space.geometry
 package dimension2
-package vector
-
-import angle._
 
 case class PolarVector(magnitude: Double, angle: CircleRadians) extends Vector {
 
