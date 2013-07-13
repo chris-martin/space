@@ -4,12 +4,4 @@ package circle
 
 import vector._
 
-trait Circle {
-
-  def center: Vector
-
-  def radius: Double
-
-  def toRadiusCircle: RadiusCircle
-
-}
+sealed case class Circle(center: Vector, radius: Double)
