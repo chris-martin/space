@@ -22,7 +22,7 @@ trait Vector {
   def *(s: Double): Vector
   def /(s: Double): Vector
 
-  def rotate(a: CircleRadians): Vector
+  def rotate(a: ArbitraryRadians): Vector
 
 }
 
@@ -44,7 +44,7 @@ sealed case class CartesianVector(x: Double, y: Double) extends Vector {
   override def *(s: Double): CartesianVector = new CartesianVector ( x*s, y*s )
   override def /(s: Double): CartesianVector = new CartesianVector ( x/s, y/s )
 
-  override def rotate(a: CircleRadians): PolarVector = toPolar.rotate(a)
+  override def rotate(a: ArbitraryRadians): PolarVector = toPolar.rotate(a)
 
 }
 
@@ -64,7 +64,7 @@ case class PolarVector(magnitude: Double, angle: CircleRadians) extends Vector {
   override def *(s: Double): PolarVector = PolarVector(magnitude * s, angle)
   override def /(s: Double): PolarVector = PolarVector(magnitude / s, angle)
 
-  override def rotate(a: CircleRadians): PolarVector = PolarVector(magnitude, angle + a)
+  override def rotate(a: ArbitraryRadians): PolarVector = PolarVector(magnitude, angle + a)
 
 }
 
@@ -87,6 +87,6 @@ object Origin extends Vector {
   override def *(s: Double): this.type = this
   override def /(s: Double): this.type = this
 
-  override def rotate(a: CircleRadians): this.type = this
+  override def rotate(a: ArbitraryRadians): this.type = this
 
 }
