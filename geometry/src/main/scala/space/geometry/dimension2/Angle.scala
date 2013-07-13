@@ -21,6 +21,8 @@ trait Angle[A <: Angle[A]] extends Any {
   def *(s: Double): A = companion(toDouble * s)
   def /(s: Double): A = companion(toDouble / s)
 
+  def unary_- : A = companion(-toDouble)
+
 }
 
 object Angle extends ArbitraryRadiansCompanion
