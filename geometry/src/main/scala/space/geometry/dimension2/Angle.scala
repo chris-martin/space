@@ -1,6 +1,11 @@
 package space.geometry
 package dimension2
 
+/** Implicit conversions between angle types are defined only when the conversion imposes a restriction
+  * on the angle's range. Conversions that lift a restriction are not done implicitly, because the result
+  * would be ambiguous (for example, Pi/4 semicircle radians could be converted to either  Pi/4 or -Pi/4
+  * circle radians, so there is no implicit semicircle-to-circle conversion). */
+
 trait Angle[A <: Angle[A]] extends Any {
 
   def toDouble: Double
@@ -44,7 +49,15 @@ trait ArbitraryRadiansCompanion extends AngleCompanion[ArbitraryRadians] {
 
 }
 
-object ArbitraryRadians extends ArbitraryRadiansCompanion
+object ArbitraryRadians extends ArbitraryRadiansCompanion {
+
+  implicit def toCircle(x: ArbitraryRadians): CircleRadians =
+    CircleRadians(x.toDouble)
+
+  implicit def toSemicircle(x: ArbitraryRadians): SemicircleRadians =
+    SemicircleRadians(x.toDouble)
+
+}
 
 /** @param toDouble in the range [-Pi, Pi)
   */
@@ -70,6 +83,9 @@ object CircleRadians extends AngleCompanion[CircleRadians] {
 
   def apply(x: Double, y: Double): CircleRadians =
     new CircleRadians(math.atan2(y, x))
+
+  implicit def toSemicircle(x: CircleRadians): SemicircleRadians =
+    SemicircleRadians(x.toDouble)
 
 }
 

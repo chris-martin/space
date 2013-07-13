@@ -13,20 +13,6 @@ package object dimension2 {
     def radians: ArbitraryRadians = ArbitraryRadians(x)
   }
 
-  // Implicit conversions between angle types are defined only when the conversion imposes a restriction
-  // on the angle's range. Conversions that lift a restriction are not done implicitly, because the result
-  // would be ambiguous (for example, Pi/4 semicircle radians could be converted to either  Pi/4 or -Pi/4
-  // circle radians, so there is no implicit semicircle-to-circle conversion).
-
-  implicit def circleToSemicircle(x: CircleRadians): SemicircleRadians =
-    SemicircleRadians(x.toDouble)
-
-  implicit def arbitraryToCircle(x: ArbitraryRadians): CircleRadians =
-    CircleRadians(x.toDouble)
-
-  implicit def arbitraryToSemicircle(x: ArbitraryRadians): SemicircleRadians =
-    SemicircleRadians(x.toDouble)
-
   // scalar differences for each angle type
 
   implicit object ArbitraryRadiansDistance extends ScalarDifference[ArbitraryRadians] {
