@@ -78,6 +78,12 @@ object CircleRadians extends AngleCompanion[CircleRadians] {
 class SemicircleRadians private (val toDouble: Double)
   extends AnyVal with Angle[SemicircleRadians] {
 
+  def toCircleRadians(sign: Sign): CircleRadians =
+    CircleRadians(sign match {
+      case Positive => toDouble
+      case Negative => toDouble - Pi
+    })
+
   override protected def companion: AngleCompanion[SemicircleRadians] = SemicircleRadians
 
   override def toString = "SemicircleRadians(%f)" format toDouble
