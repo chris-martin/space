@@ -1,7 +1,8 @@
 package space.geometry
 package dimension2
 
-class CircleRadiansSpec extends org.scalatest.FunSpec with ApproximationTesting {
+class CircleRadiansSpec extends org.scalatest.FunSpec with
+ApproximationTesting {
 
   val a = CircleRadians(Pi/4)
 

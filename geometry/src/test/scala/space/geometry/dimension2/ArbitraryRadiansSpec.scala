@@ -1,7 +1,8 @@
 package space.geometry
 package dimension2
 
-class ArbitraryRadiansSpec extends org.scalatest.FunSpec with ApproximationTesting {
+class ArbitraryRadiansSpec extends org.scalatest.FunSpec with
+ApproximationTesting {
 
   val a = ArbitraryRadians(Pi/4)
 

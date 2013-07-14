@@ -12,10 +12,10 @@ trait Line {
   def arbitraryRaySegment: RaySegment
 
   def ∩(that: Line): Option[Vector] =
-    RaySegment.lineIntersection(
-      this.arbitraryRaySegment,
-      that.arbitraryRaySegment
-    )
+  RaySegment.lineIntersection(
+    this.arbitraryRaySegment,
+    that.arbitraryRaySegment
+  )
 
 }
 
@@ -51,7 +51,8 @@ trait Ray {
 
   def rotate(a: ArbitraryRadians): Ray = Ray(source, angle + a)
 
-  /** The ray segment of length 1 that has the same source and angle as this ray.
+  /** The ray segment of length 1 that has the same source and angle as
+    * this ray.
     */
   def unitSegment: RaySegment = PointDifference(source, PolarVector(1, angle))
 
@@ -61,17 +62,24 @@ trait Ray {
     */
   def toLine: Line = toDoubleRay.toLine
 
+  def toPointAndCircleAngle: PointAndCircleAngle =
+  PointAndCircleAngle(source, angle)
+
 }
 
 object Ray {
 
   def apply(pivot: Vector, angle: CircleRadians): PointAndCircleAngle =
-    PointAndCircleAngle(pivot, angle)
+  PointAndCircleAngle(pivot, angle)
 
 }
 
 sealed case class PointAndCircleAngle(source: Vector, angle: CircleRadians)
-  extends Ray
+extends Ray {
+
+  override def toPointAndCircleAngle: PointAndCircleAngle = this
+
+}
 
 /** A line, and a point (the "pivot") on that line.
   *
@@ -83,8 +91,8 @@ trait DoubleRay { self =>
 
   def angle: SemicircleRadians
 
-  def directed(angleSign: Sign): Ray =
-    Ray(pivot, angle.toCircleRadians(angleSign))
+  def directed(angleSign: Sign): Ray = Ray(pivot,
+  angle.toCircleRadians(angleSign))
 
   def arbitrarilyDirected: Ray = directed(Positive)
 
@@ -93,8 +101,12 @@ trait DoubleRay { self =>
   def rotate(a: ArbitraryRadians): DoubleRay
 
   def toLine: Line = new Line {
+
     override def angle: SemicircleRadians = self.angle
-    override def arbitraryRaySegment: RaySegment = self.arbitrarilyDirected.unitSegment
+
+    override def arbitraryRaySegment: RaySegment =
+    self.arbitrarilyDirected.unitSegment
+
   }
 
 }
@@ -102,15 +114,15 @@ trait DoubleRay { self =>
 object DoubleRay {
 
   def apply(point: Vector, angle: SemicircleRadians): PointAndSemicircleAngle =
-    PointAndSemicircleAngle(point, angle)
+  PointAndSemicircleAngle(point, angle)
 
 }
 
-sealed case class PointAndSemicircleAngle(pivot: Vector, angle: SemicircleRadians)
-  extends DoubleRay {
+sealed case class PointAndSemicircleAngle(pivot: Vector, angle:
+SemicircleRadians) extends DoubleRay {
 
   override def rotate(a: ArbitraryRadians): PointAndSemicircleAngle =
-    DoubleRay(pivot, angle + a)
+  DoubleRay(pivot, angle + a)
 
 }
 
@@ -119,32 +131,47 @@ sealed case class PointAndSemicircleAngle(pivot: Vector, angle: SemicircleRadian
 trait RaySegment { self =>
 
   def source: Vector
+
   def destination: Vector
 
   def reverse: RaySegment
+
   def angle: CircleRadians = difference.angle
+
   def length: Double = difference.magnitude
+
   def difference: Vector
+
   def midpoint: Vector = source + difference/2
 
   def toRay: Ray = Ray(source, angle)
+
   def toDoubleRay: DoubleRay = DoubleRay(source, angle)
 
   def toLineSegment: LineSegment = new LineSegment {
+
     override def angle = self.angle
-    override def directed(angleSign: Sign): RaySegment = self.withAngleSign(angleSign)
+
+    override def directed(angleSign: Sign): RaySegment =
+    self.withAngleSign(angleSign)
+
     override def toLine: Line = self.toLine
+
   }
 
   def withAngleSign(angleSign: Sign): RaySegment =
-    if (angle.sign == angleSign) this else reverse
+  if (angle.sign == angleSign) this else reverse
 
   def toLine: Line = new Line {
+
     override def angle: SemicircleRadians = self.angle
+
     override def arbitraryRaySegment: RaySegment = self
+
   }
 
   def toTwoPoints: TwoPoints = TwoPoints(source, destination)
+
   def toPointDifference: PointDifference = PointDifference(source, difference)
 
 }
@@ -175,36 +202,50 @@ object RaySegment {
 }
 
 sealed case class TwoPoints(source: Vector, destination: Vector)
-  extends RaySegment {
+extends RaySegment {
 
   override def toTwoPoints: TwoPoints = this
 
   override def difference: Vector = destination - source
 
   override def reverse: TwoPoints =
-    TwoPoints(source = destination, destination = source)
+  TwoPoints(source = destination, destination = source)
 
 }
 
 sealed case class PointDifference(source: Vector, difference: Vector)
-  extends RaySegment {
+extends RaySegment {
 
   override def toPointDifference = this
 
   override def destination: Vector = source + difference
 
   override def reverse: PointDifference =
-    PointDifference(destination, -difference)
+  PointDifference(destination, -difference)
 
 }
 
 trait LineApproximations {
 
+  implicit object PointAndCircleAngleApproximation extends
+  Approximation[PointAndCircleAngle] {
+
+    override def apply(a: PointAndCircleAngle, b: PointAndCircleAngle)
+    (implicit tolerance: Tolerance) = $(a, b)(_.source) && $(a, b)(_.angle)
+
+  }
+
+  implicit object RayApproximation extends Approximation[Ray] {
+
+    override def apply(a: Ray, b: Ray)(implicit tolerance: Tolerance) =
+    $(a, b)(_.toPointAndCircleAngle)
+
+  }
+
   implicit object TwoPointsApproximation extends Approximation[TwoPoints] {
 
-    override def apply(a: TwoPoints, b: TwoPoints)
-    (implicit tolerance: Tolerance) =
-      $(a, b)(_.source) && $(a, b)(_.destination)
+    override def apply(a: TwoPoints, b: TwoPoints)(implicit tolerance:
+    Tolerance) = $(a, b)(_.source) && $(a, b)(_.destination)
 
   }
 
