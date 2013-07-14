@@ -144,6 +144,9 @@ trait RaySegment { self =>
     override def arbitraryRaySegment: RaySegment = self
   }
 
+  def toTwoPoints: TwoPoints = TwoPoints(source, destination)
+  def toPointDifference: PointDifference = PointDifference(source, difference)
+
 }
 
 object RaySegment {
@@ -174,6 +177,8 @@ object RaySegment {
 sealed case class TwoPoints(source: Vector, destination: Vector)
   extends RaySegment {
 
+  override def toTwoPoints: TwoPoints = this
+
   override def difference: Vector = destination - source
 
   override def reverse: TwoPoints =
@@ -184,9 +189,23 @@ sealed case class TwoPoints(source: Vector, destination: Vector)
 sealed case class PointDifference(source: Vector, difference: Vector)
   extends RaySegment {
 
+  override def toPointDifference = this
+
   override def destination: Vector = source + difference
 
   override def reverse: PointDifference =
     PointDifference(destination, -difference)
+
+}
+
+trait LineApproximations {
+
+  implicit object TwoPointsApproximation extends Approximation[TwoPoints] {
+
+    override def apply(a: TwoPoints, b: TwoPoints)
+    (implicit tolerance: Tolerance) =
+      $(a, b)(_.source) && $(a, b)(_.destination)
+
+  }
 
 }

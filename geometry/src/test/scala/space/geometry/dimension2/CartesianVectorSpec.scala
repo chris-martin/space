@@ -1,7 +1,7 @@
 package space.geometry
 package dimension2
 
-class CartesianVectorSpec extends org.scalatest.FunSpec with NearEqualityTesting {
+class CartesianVectorSpec extends org.scalatest.FunSpec with ApproximationTesting {
 
   val v = CartesianVector(_, _)
 

@@ -1,7 +1,7 @@
 package space.geometry
 package dimension2
 
-class SemicircleRadiansSpec extends org.scalatest.FunSpec with NearEqualityTesting {
+class SemicircleRadiansSpec extends org.scalatest.FunSpec with ApproximationTesting {
 
   val a = SemicircleRadians(Pi/4)
 

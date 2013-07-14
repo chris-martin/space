@@ -8,8 +8,8 @@ trait Vector {
   def x: Double
   def y: Double
 
-  def toCartesian: CartesianVector
-  def toPolar: PolarVector
+  def toCartesian: CartesianVector = CartesianVector(x, y)
+  def toPolar: PolarVector = PolarVector(magnitude, angle)
 
   def magnitude: Double
   def angle: CircleRadians
@@ -31,7 +31,6 @@ trait Vector {
 sealed case class CartesianVector(x: Double, y: Double) extends Vector {
 
   override def toCartesian: CartesianVector = this
-  override def toPolar: PolarVector = PolarVector(magnitude, angle)
 
   override def magnitude: Double = (x.square + y.square).squareRoot
   override def angle: CircleRadians = CircleRadians(x=x, y=y)
@@ -51,7 +50,6 @@ sealed case class CartesianVector(x: Double, y: Double) extends Vector {
 case class PolarVector(magnitude: Double, angle: CircleRadians) extends Vector {
 
   override def toPolar: PolarVector = this
-  override def toCartesian: CartesianVector = CartesianVector(x, y)
 
   override def x: Double = magnitude * angle.cosine
   override def y: Double = magnitude * angle.sine
@@ -73,8 +71,8 @@ object Origin extends Vector {
   override def x: Double = 0
   override def y: Double = 0
 
-  override def toCartesian: CartesianVector = CartesianVector(0, 0)
-  override def toPolar: PolarVector = PolarVector(0, CircleRadians(0))
+  override val toCartesian: CartesianVector = CartesianVector(0, 0)
+  override val toPolar: PolarVector = PolarVector(0, CircleRadians(0))
 
   override def magnitude: Double = 0
   override def angle = Angle(0)
@@ -88,5 +86,33 @@ object Origin extends Vector {
   override def /(s: Double): this.type = this
 
   override def rotate(a: ArbitraryRadians): this.type = this
+
+}
+
+trait VectorApproximations {
+
+  implicit object VectorApproximation extends Approximation[Vector] {
+
+    override def apply(a: Vector, b: Vector)
+    (implicit tolerance: Tolerance): Boolean =
+      $(a, b)(_.toCartesian)
+
+  }
+
+  implicit object CartesianVectorApproximation extends Approximation[CartesianVector] {
+
+    override def apply(a: CartesianVector, b: CartesianVector)
+    (implicit tolerance: Tolerance): Boolean =
+      $(a, b)(_.x) && $(a, b)(_.y)
+
+  }
+
+  implicit object PolarVectorApproximation extends Approximation[PolarVector] {
+
+    override def apply(a: PolarVector, b: PolarVector)
+    (implicit tolerance: Tolerance): Boolean =
+      $(a, b)(_.magnitude) && $(a, b)(_.angle)
+
+  }
 
 }

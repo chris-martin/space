@@ -1,7 +1,7 @@
 package space.geometry
 package dimension2
 
-class PolarVectorSpec extends org.scalatest.FunSpec with NearEqualityTesting {
+class PolarVectorSpec extends org.scalatest.FunSpec with ApproximationTesting {
 
   val v = PolarVector(_, _)
 
