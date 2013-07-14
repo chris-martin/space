@@ -1,6 +1,6 @@
 package space.geometry
 
-trait Approximation[A] extends ImplicitApproximationOperator {
+trait Approximation[A] extends Object with ImplicitApproximationOperator {
 
   def apply(a: A, b: A)(implicit tolerance: Tolerance): Boolean
 
@@ -13,13 +13,16 @@ object Approximation extends ImplicitApproximationOperator
 
 trait ImplicitApproximationOperator {
 
-  implicit class ApproximationOperator[A](left: A)(implicit approximation:
-  Approximation[A], tolerance: Tolerance) {
+  implicit def anyToApproximationOperator[A](a: A)(implicit approximation:
+  Approximation[A], tolerance: Tolerance): ApproximationOperator[A] =
+  new ApproximationOperator[A](a)
 
-    def  =~(right: A): Boolean =  approximation(left, right)
+}
 
-    def !=~(right: A): Boolean = !approximation(left, right)
+class ApproximationOperator[A](left: A)(implicit approximation:
+Approximation[A], tolerance: Tolerance) {
 
-  }
+  def  =~(right: A): Boolean =  approximation(left, right)
+  def !=~(right: A): Boolean = !approximation(left, right)
 
 }
