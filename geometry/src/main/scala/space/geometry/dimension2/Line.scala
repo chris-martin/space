@@ -69,8 +69,8 @@ trait Ray {
 
 object Ray {
 
-  def apply(pivot: Vector, angle: CircleRadians): PointAndCircleAngle =
-  PointAndCircleAngle(pivot, angle)
+  def apply(source: Vector, angle: CircleRadians): PointAndCircleAngle =
+  PointAndCircleAngle(source, angle)
 
 }
 
@@ -109,6 +109,9 @@ trait DoubleRay { self =>
 
   }
 
+  def toPointAndSemicircleAngle: PointAndSemicircleAngle =
+  PointAndSemicircleAngle(pivot = pivot, angle = angle)
+
 }
 
 object DoubleRay {
@@ -120,6 +123,8 @@ object DoubleRay {
 
 sealed case class PointAndSemicircleAngle(pivot: Vector, angle:
 SemicircleRadians) extends DoubleRay {
+
+  override def toPointAndSemicircleAngle: PointAndSemicircleAngle = this
 
   override def rotate(a: ArbitraryRadians): PointAndSemicircleAngle =
   DoubleRay(pivot, angle + a)
@@ -216,7 +221,7 @@ extends RaySegment {
 sealed case class PointDifference(source: Vector, difference: Vector)
 extends RaySegment {
 
-  override def toPointDifference = this
+  override def toPointDifference: PointDifference = this
 
   override def destination: Vector = source + difference
 
@@ -239,6 +244,21 @@ trait LineApproximations {
 
     override def apply(a: Ray, b: Ray)(implicit tolerance: Tolerance) =
     $(a, b)(_.toPointAndCircleAngle)
+
+  }
+
+  implicit object PointAndSemicircleAngleApproximation extends
+  Approximation[PointAndSemicircleAngle] {
+
+    override def apply(a: PointAndSemicircleAngle, b: PointAndSemicircleAngle)
+    (implicit tolerance: Tolerance) = $(a, b)(_.pivot) && $(a, b)(_.angle)
+
+  }
+
+  implicit object DoubleRayApproximation extends Approximation[DoubleRay] {
+
+    override def apply(a: DoubleRay, b: DoubleRay)(implicit tolerance:
+    Tolerance) = $(a, b)(_.toPointAndSemicircleAngle)
 
   }
 
