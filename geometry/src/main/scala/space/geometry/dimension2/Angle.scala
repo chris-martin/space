@@ -43,7 +43,7 @@ trait AngleCompanion[A] {
 }
 
 class ArbitraryRadians (val toDouble: Double)
-  extends AnyVal with Angle[ArbitraryRadians] {
+extends AnyVal with Angle[ArbitraryRadians] {
 
   override protected def companion: AngleCompanion[ArbitraryRadians] =
   ArbitraryRadians
@@ -71,7 +71,7 @@ object ArbitraryRadians extends ArbitraryRadiansCompanion {
 /** @param toDouble in the range [-Pi, Pi)
   */
 class CircleRadians private (val toDouble: Double)
-  extends AnyVal with Angle[CircleRadians] {
+extends AnyVal with Angle[CircleRadians] {
 
   def sign: Sign = if (toDouble > 0) Positive else Negative
 
@@ -84,8 +84,7 @@ class CircleRadians private (val toDouble: Double)
 
 object CircleRadians extends AngleCompanion[CircleRadians] {
 
-  override def apply(a: Double): CircleRadians =
-  new CircleRadians(
+  override def apply(a: Double): CircleRadians = new CircleRadians(
     a % twoPi match {
       case b  if b >= Pi  =>  b - twoPi
       case b  if b < -Pi  =>  b + twoPi
@@ -121,13 +120,12 @@ Angle[SemicircleRadians] {
 
 object SemicircleRadians extends AngleCompanion[SemicircleRadians] {
 
-  override def apply(a: Double): SemicircleRadians =
-    new SemicircleRadians(
-      a % Pi match {
-        case b  if b < 0  => b + Pi
-        case b            => b
-      }
-    )
+  override def apply(a: Double): SemicircleRadians = new SemicircleRadians(
+    a % Pi match {
+      case b  if b < 0  => b + Pi
+      case b            => b
+    }
+  )
 
   def apply(x: Double, y: Double): SemicircleRadians =
   SemicircleRadians(math.atan2(y, x))

@@ -47,11 +47,12 @@ trait DoubleRay extends LineLike { self =>
   def pivot: Vector
 
   def directed(angleSign: Sign): Ray = Ray(pivot,
-    angle.toCircleRadians(angleSign))
+  angle.toCircleRadians(angleSign))
 
   def arbitrarilyDirected: Ray = directed(Positive)
 
-  override def arbitraryRaySegment: RaySegment = arbitrarilyDirected.unitSegment
+  override def arbitraryRaySegment: RaySegment =
+  arbitrarilyDirected.unitSegment
 
   override def arbitrarySegment: LineSegment =
   arbitraryRaySegment.toLineSegment
@@ -67,14 +68,14 @@ trait DoubleRay extends LineLike { self =>
   }
 
   def toPointAndSemicircleAngle: PointAndSemicircleAngle =
-    PointAndSemicircleAngle(pivot = pivot, angle = angle)
+  PointAndSemicircleAngle(pivot = pivot, angle = angle)
 
 }
 
 object DoubleRay {
 
   def apply(pivot: Vector, angle: SemicircleRadians): PointAndSemicircleAngle =
-    PointAndSemicircleAngle(pivot, angle)
+  PointAndSemicircleAngle(pivot, angle)
 
 }
 
@@ -84,6 +85,6 @@ SemicircleRadians) extends DoubleRay {
   override def toPointAndSemicircleAngle: PointAndSemicircleAngle = this
 
   override def rotate(a: ArbitraryRadians): PointAndSemicircleAngle =
-    DoubleRay(pivot, angle + a)
+  DoubleRay(pivot, angle + a)
 
 }
