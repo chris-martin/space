@@ -8,16 +8,11 @@ class LineLikeSpec extends org.scalatest.FreeSpec with ApproximationTesting {
     "It can be rotated about its pivot" in {
 
       val doubleray: DoubleRay = PointAndSemicircleAngle(
-        pivot = CartesianVector(4, 5),
-        angle = Angle(2*Pi/6)
-      )
+      pivot = xy(4, 5), angle = (2*Pi/6).radians )
 
       assert (
-        doubleray.rotate(Angle(-3*Pi/6)) =~
-          PointAndSemicircleAngle(
-            pivot = CartesianVector(4, 5),
-            angle = Angle(Pi-Pi/6)
-          )
+        doubleray.rotate((-3*Pi/6).radians)
+        =~ PointAndSemicircleAngle(pivot = xy(4, 5), angle = (Pi-Pi/6).radians)
       )
 
     }

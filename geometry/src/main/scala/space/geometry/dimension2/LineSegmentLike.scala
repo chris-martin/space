@@ -16,7 +16,8 @@ trait LineSegmentLike {
   /** A double ray orthogonal to this segment, with a pivot at this segment's
     * midpoint.
     */
-  def bisector: DoubleRay = DoubleRay(midpoint, Angle(angle.toDouble + Pi/2))
+  def bisector: DoubleRay =
+  DoubleRay(pivot = midpoint, angle = (angle.toDouble + Pi/2).radians)
 
   /** The minimum-radius circle containing both endpoints.
     */
@@ -113,7 +114,7 @@ object RaySegment {
         val s = c.x * d.y - c.y * d.x
         val x = r*(c.x - d.x) - s*(a.x - b.x)
         val y = r*(c.y - d.y) - s*(a.y - b.y)
-        CartesianVector(x, y) / denominator
+        xy(x, y) / denominator
       }
     }
   }

@@ -5,42 +5,40 @@ class VectorSpec extends org.scalatest.FreeSpec with ApproximationTesting {
 
   "CartesianVector" - {
 
-    val v = CartesianVector(_, _)
-
     "It equals an identical cartesian vector." in
-    { assert ( v(3, 4) =~ v(3, 4) ) }
+    { assert ( xy(3, 4) =~ xy(3, 4) ) }
 
     "It does not equal a vector with a different X." in
-    { assert ( v(3, 4) !=~ v(30, 4) ) }
+    { assert ( xy(3, 4) !=~ xy(30, 4) ) }
 
     "It does not equal a vector with a different Y." in
-    { assert ( v(3, 4) !=~ v(3, 40) ) }
+    { assert ( xy(3, 4) !=~ xy(3, 40) ) }
 
     "It calculates its magnitude." in
-    { assert ( v(3, 4).magnitude =~ 5 ) }
+    { assert ( xy(3, 4).magnitude =~ 5 ) }
 
     "It calculates its angle." in
-    { val x = v(0.5, -(3.squareRoot/2))
+    { val x = xy(0.5, -(3.squareRoot/2))
       assert ( x.angle =~ CircleRadians(5*math.Pi/3) ) }
 
     "Its angle is invariant under change in magnitude." in
-    { val x = v(0.935234, 3.353)
+    { val x = xy(0.935234, 3.353)
       assert ( x.angle =~ (x*713).angle ) }
 
     "It can be negated." in
-    { assert ( -v(3, 4) =~ v(-3, -4) ) }
+    { assert ( -xy(3, 4) =~ xy(-3, -4) ) }
 
     "It can be added to another cartesian vector." in
-    { assert ( v(3, 4) + v(1, 3) =~ v(4, 7) ) }
+    { assert ( xy(3, 4) + xy(1, 3) =~ xy(4, 7) ) }
 
     "It can be subtracted from another cartesian vector." in
-    { assert ( v(3, 4) - v(1, 3) =~ v(2, 1) ) }
+    { assert ( xy(3, 4) - xy(1, 3) =~ xy(2, 1) ) }
 
     "Its magnitude can be multiplied by a scalar." in
-    { assert ( v(3, 4) * 1.5 =~ v(4.5, 6) ) }
+    { assert ( xy(3, 4) * 1.5 =~ xy(4.5, 6) ) }
 
     "Its magnitude can be divided by a scalar." in
-    { assert ( v(3, 4) / 2 =~ v(1.5, 2) ) }
+    { assert ( xy(3, 4) / 2 =~ xy(1.5, 2) ) }
 
   }
 

@@ -88,13 +88,14 @@ object Origin extends Vector {
 
   override def y: Double = 0
 
-  override val toCartesian: CartesianVector = CartesianVector(0, 0)
+  override val toCartesian: CartesianVector = CartesianVector(x = 0, y = 0)
 
-  override val toPolar: PolarVector = PolarVector(0, CircleRadians(0))
+  override val toPolar: PolarVector =
+  PolarVector(magnitude = 0, angle = 0.radians)
 
   override def magnitude: Double = 0
 
-  override def angle = Angle(0)
+  override def angle: CircleRadians = 0.radians
 
   override def unary_- : this.type = this
 
