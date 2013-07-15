@@ -23,7 +23,8 @@ trait Approximations {
   extends Approximation[PointAndCircleAngle] {
 
     override def apply(a: PointAndCircleAngle, b: PointAndCircleAngle)
-    (implicit tolerance: Tolerance) = $(a, b)(_.source) && $(a, b)(_.angle)
+    (implicit tolerance: Tolerance): Boolean =
+    $(a, b)(_.source) && $(a, b)(_.angle)
 
   }
 
@@ -51,8 +52,8 @@ trait Approximations {
 
   implicit object RayApproximation extends Approximation[Ray] {
 
-    override def apply(a: Ray, b: Ray)(implicit tolerance: Tolerance) =
-    $(a, b)(_.toPointAndCircleAngle)
+    override def apply(a: Ray, b: Ray)(implicit tolerance: Tolerance):
+    Boolean = $(a, b)(_.toPointAndCircleAngle)
 
   }
 
@@ -60,21 +61,29 @@ trait Approximations {
   extends Approximation[PointAndSemicircleAngle] {
 
     override def apply(a: PointAndSemicircleAngle, b: PointAndSemicircleAngle)
-    (implicit tolerance: Tolerance) = $(a, b)(_.pivot) && $(a, b)(_.angle)
+    (implicit tolerance: Tolerance): Boolean =
+    $(a, b)(_.pivot) && $(a, b)(_.angle)
 
   }
 
   implicit object DoubleRayApproximation extends Approximation[DoubleRay] {
 
     override def apply(a: DoubleRay, b: DoubleRay)(implicit tolerance:
-    Tolerance) = $(a, b)(_.toPointAndSemicircleAngle)
+    Tolerance): Boolean = $(a, b)(_.toPointAndSemicircleAngle)
 
   }
 
   implicit object TwoPointsApproximation extends Approximation[TwoPoints] {
 
     override def apply(a: TwoPoints, b: TwoPoints)(implicit tolerance:
-    Tolerance) = $(a, b)(_.source) && $(a, b)(_.destination)
+    Tolerance): Boolean = $(a, b)(_.source) && $(a, b)(_.destination)
+
+  }
+
+  implicit object CircleApproximation extends Approximation[Circle] {
+
+    override def apply(a: Circle, b: Circle)(implicit tolerance: Tolerance):
+    Boolean = $(a, b)(_.center) && $(a, b)(_.radius)
 
   }
 
