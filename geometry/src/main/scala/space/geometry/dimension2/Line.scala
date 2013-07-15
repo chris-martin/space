@@ -19,19 +19,38 @@ trait Line {
 
 }
 
+/**
+ * A supertrait for a line subset with two end points. The endpoints may be
+ * unordered (a "line segment") or ordered (a "ray segment").
+ */
+trait LineSegmentLike {
+
+  def length: Double
+
+  def midpoint: Vector
+
+  def angle: Angle[_]
+
+  /** A double ray orthogonal to this segment, with a pivot at this segment's
+    * midpoint.
+    */
+  def bisector: DoubleRay = DoubleRay(midpoint, Angle(angle.toDouble + Pi/2))
+
+  /** The unique line by which this segment is contained.
+    */
+  def toLine: Line
+
+}
+
 /** A line segment.
   *
   * {{{    ●--●    }}}
   */
-trait LineSegment {
+trait LineSegment extends LineSegmentLike {
 
-  def angle: SemicircleRadians
+  override def angle: SemicircleRadians
 
-  /** The unique line by which this line segment is contained.
-    */
-  def toLine: Line
-
-  def midpoint: Vector = arbitrarilyDirected.midpoint
+  override def midpoint: Vector = arbitrarilyDirected.midpoint
 
   def directed(angleSign: Sign): RaySegment
 
@@ -133,7 +152,7 @@ SemicircleRadians) extends DoubleRay {
 
 /** {{{    ●--▸●   }}}
   */
-trait RaySegment { self =>
+trait RaySegment extends LineSegmentLike { self =>
 
   def source: Vector
 
@@ -141,13 +160,13 @@ trait RaySegment { self =>
 
   def reverse: RaySegment
 
-  def angle: CircleRadians = difference.angle
+  override def angle: CircleRadians = difference.angle
 
-  def length: Double = difference.magnitude
+  override def length: Double = difference.magnitude
 
   def difference: Vector
 
-  def midpoint: Vector = source + difference/2
+  override def midpoint: Vector = source + difference/2
 
   def toRay: Ray = Ray(source, angle)
 
@@ -155,7 +174,9 @@ trait RaySegment { self =>
 
   def toLineSegment: LineSegment = new LineSegment {
 
-    override def angle = self.angle
+    override def length: Double = self.length
+
+    override def angle: SemicircleRadians = self.angle
 
     override def directed(angleSign: Sign): RaySegment =
     self.withAngleSign(angleSign)
@@ -167,7 +188,7 @@ trait RaySegment { self =>
   def withAngleSign(angleSign: Sign): RaySegment =
   if (angle.sign == angleSign) this else reverse
 
-  def toLine: Line = new Line {
+  override def toLine: Line = new Line {
 
     override def angle: SemicircleRadians = self.angle
 
