@@ -133,23 +133,3 @@ object SemicircleRadians extends AngleCompanion[SemicircleRadians] {
   SemicircleRadians(math.atan2(y, x))
 
 }
-
-trait AngleApproximations {
-
-  trait AngleApproximation[A <: Angle[A]] extends Approximation[A] {
-
-    override def apply(a: A, b: A)(implicit tolerance: Tolerance): Boolean =
-    $(a, b)(_.toDouble)
-
-  }
-
-  implicit object ArbitraryRadiansApproximation
-  extends AngleApproximation[ArbitraryRadians]
-
-  implicit object CircleRadiansApproximation
-  extends AngleApproximation[CircleRadians]
-
-  implicit object SemicircleRadiansApproximation
-  extends AngleApproximation[SemicircleRadians]
-
-}

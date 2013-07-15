@@ -14,4 +14,9 @@ package object dimension2 extends Approximations {
 
   val Counterclockwise: RotationDirection = Positive
 
+  implicit final class ArrowAssoc(left: Vector) {
+    def ->(right: Vector): TwoPoints = TwoPoints(left, right)
+    def →(right: Vector): TwoPoints = ->(right)
+  }
+
 }

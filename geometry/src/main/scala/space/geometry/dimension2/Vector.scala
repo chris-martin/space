@@ -109,29 +109,3 @@ object Origin extends Vector {
   override def rotate(a: ArbitraryRadians): this.type = this
 
 }
-
-trait VectorApproximations {
-
-  implicit object VectorApproximation extends Approximation[Vector] {
-
-    override def apply(a: Vector, b: Vector)(implicit tolerance: Tolerance):
-    Boolean = $(a, b)(_.toCartesian)
-
-  }
-
-  implicit object CartesianVectorApproximation extends
-  Approximation[CartesianVector] {
-
-    override def apply(a: CartesianVector, b: CartesianVector)(implicit
-    tolerance: Tolerance): Boolean = $(a, b)(_.x) && $(a, b)(_.y)
-
-  }
-
-  implicit object PolarVectorApproximation extends Approximation[PolarVector] {
-
-    override def apply(a: PolarVector, b: PolarVector)(implicit tolerance:
-    Tolerance): Boolean = $(a, b)(_.magnitude) && $(a, b)(_.angle)
-
-  }
-
-}

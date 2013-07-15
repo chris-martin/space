@@ -1,0 +1,84 @@
+package space.geometry
+package dimension2
+
+/** A supertrait for line types.
+  */
+trait LineLike {
+
+  def angle: SemicircleRadians
+
+  def arbitrarySegment: LineSegment
+
+  def toLine: Line
+
+  def ∩(that: LineLike): Option[Vector] =
+    RaySegment.lineIntersection(
+      this.arbitrarySegment.arbitrarilyDirected,
+      that.arbitrarySegment.arbitrarilyDirected
+    )
+
+}
+
+/** A line.
+  *
+  * {{{    ◂--▸    }}}
+  */
+trait Line extends LineLike {
+
+  def arbitraryDoubleRay: DoubleRay
+
+  override def arbitrarySegment: LineSegment =
+    arbitraryDoubleRay.arbitrarySegment
+
+  override def angle: SemicircleRadians = arbitraryDoubleRay.angle
+
+  override def toLine: Line = this
+
+}
+
+/** A line, and a point (the "pivot") on that line.
+  *
+  * {{{    ◂--●--▸    }}}
+  */
+trait DoubleRay extends LineLike { self =>
+
+  def pivot: Vector
+
+  def directed(angleSign: Sign): Ray = Ray(pivot,
+    angle.toCircleRadians(angleSign))
+
+  def arbitrarilyDirected: Ray = directed(Positive)
+
+  override def arbitrarySegment = arbitrarilyDirected.unitSegment.toLineSegment
+
+  /** Rotation about the pivot. The resulting `DoubleRay` has the same pivot.
+    */
+  def rotate(a: ArbitraryRadians): DoubleRay
+
+  override def toLine: Line = new Line {
+
+    override def arbitraryDoubleRay = self
+
+  }
+
+  def toPointAndSemicircleAngle: PointAndSemicircleAngle =
+    PointAndSemicircleAngle(pivot = pivot, angle = angle)
+
+}
+
+object DoubleRay {
+
+  def apply(pivot: Vector, angle: SemicircleRadians): PointAndSemicircleAngle =
+    PointAndSemicircleAngle(pivot, angle)
+
+}
+
+sealed case class PointAndSemicircleAngle(pivot: Vector, angle:
+SemicircleRadians) extends DoubleRay {
+
+  override def toPointAndSemicircleAngle: PointAndSemicircleAngle = this
+
+  override def rotate(a: ArbitraryRadians): PointAndSemicircleAngle =
+    DoubleRay(pivot, angle + a)
+
+}

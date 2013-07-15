@@ -1,7 +1,7 @@
 package space.geometry
 package dimension2
 
-class LineSpec extends org.scalatest.FreeSpec with ApproximationTesting {
+class RaySpec extends org.scalatest.FreeSpec with ApproximationTesting {
 
   "PointAndCircleAngle" - {
 
@@ -37,27 +37,6 @@ class LineSpec extends org.scalatest.FreeSpec with ApproximationTesting {
           angle = Angle(Pi/2)
         )
       )
-    }
-
-  }
-
-  "PointAndSemicircleAngle" - {
-
-    "It can be rotated about its pivot" in {
-
-      val doubleray: DoubleRay = PointAndSemicircleAngle(
-        pivot = CartesianVector(4, 5),
-        angle = Angle(2*Pi/6)
-      )
-
-      assert (
-        doubleray.rotate(Angle(-3*Pi/6)) =~
-        PointAndSemicircleAngle(
-          pivot = CartesianVector(4, 5),
-          angle = Angle(Pi-Pi/6)
-        )
-      )
-
     }
 
   }
