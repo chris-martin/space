@@ -11,11 +11,10 @@ trait LineLike {
 
   def toLine: Line
 
-  def ∩(that: LineLike): Option[Vector] =
-    RaySegment.lineIntersection(
-      this.arbitrarySegment.arbitrarilyDirected,
-      that.arbitrarySegment.arbitrarilyDirected
-    )
+  def arbitraryRaySegment: RaySegment
+
+  def ∩(that: LineLike): Option[Vector] = RaySegment.lineIntersection(
+  this.arbitraryRaySegment, that.arbitraryRaySegment)
 
 }
 
@@ -28,7 +27,10 @@ trait Line extends LineLike {
   def arbitraryDoubleRay: DoubleRay
 
   override def arbitrarySegment: LineSegment =
-    arbitraryDoubleRay.arbitrarySegment
+  arbitraryDoubleRay.arbitrarySegment
+
+  override def arbitraryRaySegment: RaySegment =
+  arbitrarySegment.arbitrarilyDirected
 
   override def angle: SemicircleRadians = arbitraryDoubleRay.angle
 
@@ -49,7 +51,10 @@ trait DoubleRay extends LineLike { self =>
 
   def arbitrarilyDirected: Ray = directed(Positive)
 
-  override def arbitrarySegment = arbitrarilyDirected.unitSegment.toLineSegment
+  override def arbitraryRaySegment: RaySegment = arbitrarilyDirected.unitSegment
+
+  override def arbitrarySegment: LineSegment =
+  arbitraryRaySegment.toLineSegment
 
   /** Rotation about the pivot. The resulting `DoubleRay` has the same pivot.
     */
