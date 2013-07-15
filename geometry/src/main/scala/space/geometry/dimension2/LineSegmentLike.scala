@@ -18,6 +18,10 @@ trait LineSegmentLike {
     */
   def bisector: DoubleRay = DoubleRay(midpoint, Angle(angle.toDouble + Pi/2))
 
+  /** The minimum-radius circle containing both endpoints.
+    */
+  def circumcircle: Circle = Circle(center = midpoint, radius = length/2)
+
   /** The unique line by which this segment is contained.
     */
   def toLine: Line
@@ -64,24 +68,24 @@ trait RaySegment extends LineSegmentLike { self =>
 
   def toLineSegment: LineSegment = new LineSegment {
 
+    override def directed(angleSign: Sign): RaySegment =
+    self.withAngleSign(angleSign)
+
     override def length: Double = self.length
 
     override def angle: SemicircleRadians = self.angle
-
-    override def directed(angleSign: Sign): RaySegment =
-      self.withAngleSign(angleSign)
 
     override def toLine: Line = self.toLine
 
   }
 
   def withAngleSign(angleSign: Sign): RaySegment =
-    if (angle.sign == angleSign) this else reverse
+  if (angle.sign == angleSign) this else reverse
 
   override def toLine: Line = new Line {
 
     override def arbitraryDoubleRay: DoubleRay =
-      DoubleRay(pivot = self.source, angle = self.angle)
+    DoubleRay(pivot = self.source, angle = self.angle)
 
   }
 
@@ -117,25 +121,25 @@ object RaySegment {
 }
 
 sealed case class TwoPoints(source: Vector, destination: Vector)
-  extends RaySegment {
+extends RaySegment {
 
   override def toTwoPoints: TwoPoints = this
 
   override def difference: Vector = destination - source
 
   override def reverse: TwoPoints =
-    TwoPoints(source = destination, destination = source)
+  TwoPoints(source = destination, destination = source)
 
 }
 
 sealed case class PointDifference(source: Vector, difference: Vector)
-  extends RaySegment {
+extends RaySegment {
 
   override def toPointDifference: PointDifference = this
 
   override def destination: Vector = source + difference
 
   override def reverse: PointDifference =
-    PointDifference(destination, -difference)
+  PointDifference(destination, -difference)
 
 }

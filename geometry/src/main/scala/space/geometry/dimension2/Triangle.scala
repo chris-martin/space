@@ -27,6 +27,9 @@ Triangle { self =>
 
   override def circumcenter: Option[Vector] = (a→b).bisector ∩ (b→c).bisector
 
-  override def circumcircle: Circle = ???
+  override def circumcircle: Circle = circumcenter match {
+    case Some(x) => Circle(center = x, radius = (a→x).length)
+    case None => Seq(a→b, b→c, c→a).maxBy(_.length).circumcircle
+  }
 
 }

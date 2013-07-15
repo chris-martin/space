@@ -21,4 +21,19 @@ trait ApproximationTesting {
 
   }
 
+  implicit class ApproximateOptionEqualizer[A](left: Option[A])
+  (implicit approximation: Approximation[A]) {
+
+    val optionalApproximation = new OptionalApproximation[A]()
+
+    def =~(right: Option[A]): Option[String] =
+    optionalApproximation(left, right) ?
+    "%s is not equal to %s".format(left, right)
+
+    def !=~(right: Option[A]): Option[String] =
+    !optionalApproximation(left, right) ?
+    "%s is equal to %s".format(left, right)
+
+  }
+
 }
