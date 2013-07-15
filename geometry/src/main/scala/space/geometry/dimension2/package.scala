@@ -5,6 +5,8 @@ package object dimension2 extends Approximations {
   def xy(x: Double, y: Double): CartesianVector = CartesianVector(x, y)
 
   val ∠ = Angle
+  val △ = Triangle
+  val ○ = Circle
 
   implicit class DoubleEnrichedForDimension2(x: Double) {
 

@@ -13,6 +13,13 @@ trait Triangle {
 
 }
 
+object Triangle {
+
+  def apply(a: Vector, b: Vector, c: Vector): ThreePoints =
+  ThreePoints(a, b, c)
+
+}
+
 sealed case class ThreePoints(a: Vector, b: Vector, c: Vector) extends
 Triangle { self =>
 
