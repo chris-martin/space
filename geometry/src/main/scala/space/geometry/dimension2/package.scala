@@ -8,4 +8,10 @@ package object dimension2 extends Approximations {
 
   }
 
+  type RotationDirection = Sign
+
+  val Clockwise: RotationDirection = Negative
+
+  val Counterclockwise: RotationDirection = Positive
+
 }
