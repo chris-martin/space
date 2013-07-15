@@ -4,6 +4,8 @@ package object dimension2 extends Approximations {
 
   def xy(x: Double, y: Double): CartesianVector = CartesianVector(x, y)
 
+  val ∠ = Angle
+
   implicit class DoubleEnrichedForDimension2(x: Double) {
 
     def radians: ArbitraryRadians = ArbitraryRadians(x)

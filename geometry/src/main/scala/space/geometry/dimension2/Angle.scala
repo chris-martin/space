@@ -30,7 +30,11 @@ trait Angle[A <: Angle[A]] extends Any {
 
 }
 
-object Angle extends ArbitraryRadiansCompanion
+object Angle extends ArbitraryRadiansCompanion {
+
+  def apply(a: Vector, b: Vector, c: Vector): SemicircleRadians = ???
+
+}
 
 trait AngleCompanion[A] {
 
