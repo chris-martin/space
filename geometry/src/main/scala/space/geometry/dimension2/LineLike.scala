@@ -16,6 +16,12 @@ trait LineLike {
   def ∩(that: LineLike): Option[Vector] = RaySegment.lineIntersection(
   this.arbitraryRaySegment, that.arbitraryRaySegment)
 
+  /** The point `b` on this line that minimizes the distance
+    * between `a` and `b`.
+    */
+  def pointClosestTo(a: Vector): Vector =
+  (this ∩ PointAndSemicircleAngle(a, angle.orthogonal)).get
+
 }
 
 /** A line.
