@@ -1,6 +1,7 @@
 package space.geometry
 
-package object dimension2 extends Object with Approximations with ArrowOps {
+package object dimension2 extends Object with Approximations with SampleOps
+with ArrowOps {
 
   def xy(x: Double, y: Double): CartesianVector = CartesianVector(x, y)
 
