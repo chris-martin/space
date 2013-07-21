@@ -1,6 +1,6 @@
 package space.geometry
 
-package object dimension2 extends Object with Approximations {
+package object dimension2 extends Object with Approximations with ArrowOps {
 
   def xy(x: Double, y: Double): CartesianVector = CartesianVector(x, y)
 
@@ -19,22 +19,5 @@ package object dimension2 extends Object with Approximations {
   val Clockwise: RotationDirection = Negative
 
   val Counterclockwise: RotationDirection = Positive
-
-  implicit class VectorArrowAssoc(left: Vector) {
-
-    def ->(right: Vector): TwoPoints = TwoPoints(left, right)
-
-    def →(right: Vector): TwoPoints = ->(right)
-
-  }
-
-  implicit class TwoPointsArrowAssoc(left: TwoPoints) {
-
-    def ->(right: Vector): ThreePoints =
-    ThreePoints(left.source, left.destination, right)
-
-    def →(right: Vector): ThreePoints = ->(right)
-
-  }
 
 }
