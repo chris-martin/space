@@ -109,6 +109,8 @@ object CircleRadians extends AngleCompanion[CircleRadians] {
 class SemicircleRadians private (val toDouble: Double) extends AnyVal with
 Angle[SemicircleRadians] {
 
+  def orthogonal: SemicircleRadians = this + Angle(Pi/2)
+
   def toCircleRadians(sign: Sign): CircleRadians =
   CircleRadians(sign match {
     case Positive => toDouble
