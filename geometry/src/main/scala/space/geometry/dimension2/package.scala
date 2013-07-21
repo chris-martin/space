@@ -1,6 +1,6 @@
 package space.geometry
 
-package object dimension2 extends Approximations {
+package object dimension2 extends Object with Approximations {
 
   def xy(x: Double, y: Double): CartesianVector = CartesianVector(x, y)
 
