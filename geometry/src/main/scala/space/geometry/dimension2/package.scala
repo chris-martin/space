@@ -12,6 +12,8 @@ package object dimension2 extends Object with Approximations with ArrowOps {
 
     def radians: ArbitraryRadians = ArbitraryRadians(x)
 
+    def *(vector: Vector): Vector = vector * x
+
   }
 
   type RotationDirection = Sign
