@@ -13,10 +13,11 @@ trait Ray {
 
   def rotate(a: ArbitraryRadians): Ray = Ray(source, angle + a)
 
-  /** The ray segment of length 1 that has the same source and angle as
-    * this ray.
+  /** The ray segment of length `length` that has the same source and angle
+    * as this ray.
     */
-  def unitSegment: RaySegment = PointDifference(source, PolarVector(1, angle))
+  def segment(length: Double): RaySegment =
+  PointDifference(source, PolarVector(length, angle))
 
   def toDoubleRay: DoubleRay = DoubleRay(source, angle)
 

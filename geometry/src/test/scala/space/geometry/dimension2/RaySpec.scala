@@ -5,18 +5,18 @@ class RaySpec extends org.scalatest.FreeSpec with ApproximationTesting {
 
   "PointAndCircleAngle" - {
 
-    "It can be converted to a ray segment of magnitude 1" in {
+    "It can be converted to a ray segment" in {
 
       val ray: Ray = PointAndCircleAngle(
       source = xy(3, 2), angle = (-Pi / 2).radians)
 
-      val unit: RaySegment = ray.unitSegment
+      val segment: RaySegment = ray.segment(2)
 
-      assert ( unit.length =~ 1 )
+      assert ( segment.length =~ 2 )
 
       assert (
-        unit.toTwoPoints
-        =~ TwoPoints(source = xy(3, 2), destination = xy(3, 1))
+        segment.toTwoPoints
+        =~ TwoPoints(source = xy(3, 2), destination = xy(3, 0))
       )
     }
 

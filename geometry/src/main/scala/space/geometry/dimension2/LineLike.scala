@@ -58,7 +58,7 @@ trait DoubleRay extends LineLike { self =>
   def arbitrarilyDirected: Ray = directed(Positive)
 
   override def arbitraryRaySegment: RaySegment =
-  arbitrarilyDirected.unitSegment
+  arbitrarilyDirected.segment(1)
 
   override def arbitrarySegment: LineSegment =
   arbitraryRaySegment.toLineSegment
