@@ -1,6 +1,6 @@
 package space
 
-package object geometry extends Approximations {
+package object geometry extends Object with Approximations {
 
   val Pi = math.Pi
 
