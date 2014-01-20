@@ -42,4 +42,6 @@ object Build extends Build {
 
   lazy val jogl = project("jogl", "jogl")
 
+  lazy val svg = project("svg", "sandbox/svg") dependsOn (geometry, color)
+
 }
