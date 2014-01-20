@@ -33,7 +33,7 @@ brightness: ColorValue) extends Color with SpecificColorType[HSB] {
 
 object HSB extends ColorCompanion[HSB] {
 
-  override def apply(v1: Double, v2: Double, v3: Double) =
+  override def apply(v1: Double, v2: Double, v3: Double): HSB =
   apply(v1: Hue, v2: ColorValue, v3: ColorValue)
 }
 

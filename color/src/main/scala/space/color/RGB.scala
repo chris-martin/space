@@ -32,7 +32,7 @@ extends Color with SpecificColorType[RGB] {
 
 object RGB extends Object with ColorCompanion[RGB] {
 
-  override def apply(v1: Double, v2: Double, v3: Double) =
+  override def apply(v1: Double, v2: Double, v3: Double): RGB =
   apply(v1: ColorValue, v2: ColorValue, v3: ColorValue)
 }
 
