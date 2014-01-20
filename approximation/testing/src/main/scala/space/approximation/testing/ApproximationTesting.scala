@@ -1,4 +1,5 @@
-package space.geometry
+package space.approximation
+package testing
 
 trait ApproximationTesting {
 
@@ -7,7 +8,6 @@ trait ApproximationTesting {
   implicit class Okay(ok: Boolean) {
 
     def ?[A](ifNot: => A): Option[A] = if (ok) None else Some(ifNot)
-
   }
 
   implicit class ApproximateEqualizer[A](left: A)(implicit approximation:
@@ -18,7 +18,6 @@ trait ApproximationTesting {
 
     def !=~(right: A): Option[String] = !approximation(left, right) ?
     "%s is equal to %s".format(left, right)
-
   }
 
   implicit class ApproximateOptionEqualizer[A](left: Option[A])
@@ -33,7 +32,5 @@ trait ApproximationTesting {
     def !=~(right: Option[A]): Option[String] =
     !optionalApproximation(left, right) ?
     "%s is equal to %s".format(left, right)
-
   }
-
 }

@@ -1,7 +1,8 @@
 package space.geometry
 package dimension2
 
-class LineLikeSpec extends org.scalatest.FreeSpec with ApproximationTesting {
+class LineLikeSpec extends org.scalatest.FreeSpec
+with space.approximation.testing.ApproximationTesting {
 
   "PointAndSemicircleAngle" - {
 

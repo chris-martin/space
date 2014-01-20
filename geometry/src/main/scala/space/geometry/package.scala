@@ -1,6 +1,6 @@
 package space
 
-package object geometry extends Object with Approximations {
+package object geometry {
 
   val Pi = math.Pi
 
@@ -13,4 +13,5 @@ package object geometry extends Object with Approximations {
     def squareRoot: Double = math.sqrt(x)
   }
 
+  implicit val DoubleApproximation = space.approximation.DoubleApproximation
 }

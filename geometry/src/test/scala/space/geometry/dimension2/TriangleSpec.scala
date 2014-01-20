@@ -1,7 +1,8 @@
 package space.geometry
 package dimension2
 
-class TriangleSpec extends org.scalatest.FreeSpec with ApproximationTesting {
+class TriangleSpec extends org.scalatest.FreeSpec
+with space.approximation.testing.ApproximationTesting {
 
   "ThreePoints" - {
 

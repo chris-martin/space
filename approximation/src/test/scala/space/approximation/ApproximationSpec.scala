@@ -1,4 +1,4 @@
-package space.geometry
+package space.approximation
 
 class ApproximationSpec extends org.scalatest.FreeSpec {
 
@@ -10,7 +10,6 @@ class ApproximationSpec extends org.scalatest.FreeSpec {
       assert( 5.4 =~ 5.400000001 )
       assert( 5.4 !=~ 5.41 )
     }
-
   }
 
   "It can be used by importing Approximation._" in {
@@ -19,7 +18,5 @@ class ApproximationSpec extends org.scalatest.FreeSpec {
 
     assert( 5.4 =~ 5.400000001 )
     assert( 5.4 !=~ 5.41 )
-
   }
-
 }

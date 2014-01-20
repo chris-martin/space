@@ -1,6 +1,8 @@
 package space.geometry
 package dimension2
 
+import space.approximation.Approximation
+
 trait Approximations {
 
   trait AngleApproximation[A <: Angle[A]] extends Approximation[A] {

@@ -1,7 +1,8 @@
 package space.geometry
 package dimension2
 
-class ArrowOpsSpec extends org.scalatest.FreeSpec with ApproximationTesting {
+class ArrowOpsSpec extends org.scalatest.FreeSpec
+with space.approximation.testing.ApproximationTesting {
 
   "The arrow between to points is a ray segment connecting the two points" in
   { assert ( (xy(1,2) → xy(5,4)) === TwoPoints(xy(1,2), xy(5,4)) ) }

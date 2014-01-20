@@ -1,7 +1,8 @@
 package space.geometry
 package dimension2
 
-class AngleSpec extends org.scalatest.FreeSpec with ApproximationTesting {
+class AngleSpec extends org.scalatest.FreeSpec
+with space.approximation.testing.ApproximationTesting {
 
   "ArbitraryRadians" - {
 
