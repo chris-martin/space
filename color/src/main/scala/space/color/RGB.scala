@@ -5,8 +5,10 @@ import scala.math.abs
 sealed case class RGB(red: ColorValue, green: ColorValue, blue: ColorValue)
 extends Color with SpecificColorType[RGB] {
 
-  private def max: Double = Seq(red, green, blue).max
-  private def min: Double = Seq(red, green, blue).min
+  def values = Seq(red, green, blue)
+
+  private def max: Double = values.max
+  private def min: Double = values.min
   private def chroma: Double = max - min
 
   override def toRGB: RGB = this
@@ -28,6 +30,12 @@ extends Color with SpecificColorType[RGB] {
     saturation = if (chroma == 0) 0 else chroma / (1 - abs(min + max - 1)),
     lightness = (min + max) / 2
   )
+
+  def toHexString: String = "#" + values.map({ v =>
+    var s = BigInt((v*255).toInt).toString(16)
+    if (s.length == 1) s = "0" + s
+    s
+  }).mkString
 }
 
 object RGB extends Object with ColorCompanion[RGB] {
