@@ -11,7 +11,6 @@ package object geometry extends Object with Approximations {
     def square: Double = x * x
 
     def squareRoot: Double = math.sqrt(x)
-
   }
 
 }

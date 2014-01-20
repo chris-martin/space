@@ -12,14 +12,12 @@ trait SampleOps {
       magnitude = random.nextDouble() * segment.length,
       angle = segment.angle
     )
-
   }
 
   implicit class SampleVectorFromLineSegment(segment: LineSegment) {
 
     def sample()(implicit random: Random): Vector =
       segment.arbitrarilyDirected.sample()
-
   }
 
   implicit class SamplePointOnACircle(circle: Circle) {
@@ -29,7 +27,6 @@ trait SampleOps {
       magnitude = circle.radius,
       angle = CircleRadians(random.nextDouble() * twoPi)
     )
-
   }
 
   implicit class SamplePointOnATriangle(triangle: Triangle) {
@@ -38,7 +35,6 @@ trait SampleOps {
 
     def sample()(implicit random: Random): Vector =
     perimeter traverse (random.nextDouble() * perimeter.length)
-
   }
 
   implicit class SamplePointInsideATriangle(interior: Triangle.Interior) {
@@ -54,7 +50,5 @@ trait SampleOps {
       val (r1, r2) = (random.nextDouble(), random.nextDouble())
       (1-r1.squareRoot)*a + r1.squareRoot*(1-r2)*b + r1.squareRoot*r2*c
     }
-
   }
-
 }

@@ -39,7 +39,6 @@ class VectorSpec extends org.scalatest.FreeSpec with ApproximationTesting {
 
     "Its magnitude can be divided by a scalar." in
     { assert ( xy(3, 4) / 2 =~ xy(1.5, 2) ) }
-
   }
 
   "PolarVector" - {
@@ -72,7 +71,5 @@ class VectorSpec extends org.scalatest.FreeSpec with ApproximationTesting {
     "It can be negated." in
     { val m = 2.squareRoot
       assert ( -v(m, Angle(Pi/4)) =~ v(m, Angle(-3*Pi/4)) ) }
-
   }
-
 }

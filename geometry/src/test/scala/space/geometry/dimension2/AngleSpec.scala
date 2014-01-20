@@ -18,7 +18,6 @@ class AngleSpec extends org.scalatest.FreeSpec with ApproximationTesting {
 
     "It does not equal itself minus 2 Pi." in
     { assert ( a !=~ a - ArbitraryRadians(2*Pi) ) }
-
   }
 
   "CircleRadians" - {
@@ -36,7 +35,6 @@ class AngleSpec extends org.scalatest.FreeSpec with ApproximationTesting {
 
     "It equals itself minus a circle." in
     { assert ( a =~ a - Angle.circle ) }
-
   }
 
   "SemicircleRadians" - {
@@ -54,7 +52,6 @@ class AngleSpec extends org.scalatest.FreeSpec with ApproximationTesting {
 
     "It equals itself minus a half circle." in
     { assert ( a =~ a - Angle.halfCircle ) }
-
   }
 
 }

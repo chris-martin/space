@@ -26,7 +26,6 @@ trait LineSegmentLike {
   /** The unique line by which this segment is contained.
     */
   def toLine: Line
-
 }
 
 /** A line segment.
@@ -42,7 +41,6 @@ trait LineSegment extends LineSegmentLike {
   def directed(angleSign: Sign): RaySegment
 
   def arbitrarilyDirected: RaySegment = directed(Positive)
-
 }
 
 /** {{{    ●--▸●   }}}
@@ -77,7 +75,6 @@ trait RaySegment extends LineSegmentLike { self =>
     override def angle: SemicircleRadians = self.angle
 
     override def toLine: Line = self.toLine
-
   }
 
   def withAngleSign(angleSign: Sign): RaySegment =
@@ -87,13 +84,11 @@ trait RaySegment extends LineSegmentLike { self =>
 
     override def arbitraryDoubleRay: DoubleRay =
     DoubleRay(pivot = self.source, angle = self.angle)
-
   }
 
   def toTwoPoints: TwoPoints = TwoPoints(source, destination)
 
   def toPointDifference: PointDifference = PointDifference(source, difference)
-
 }
 
 object RaySegment {
@@ -118,7 +113,6 @@ object RaySegment {
       }
     }
   }
-
 }
 
 sealed case class TwoPoints(source: Vector, destination: Vector)
@@ -130,7 +124,6 @@ extends RaySegment {
 
   override def reverse: TwoPoints =
   TwoPoints(source = destination, destination = source)
-
 }
 
 sealed case class PointDifference(source: Vector, difference: Vector)
@@ -142,5 +135,4 @@ extends RaySegment {
 
   override def reverse: PointDifference =
   PointDifference(destination, -difference)
-
 }

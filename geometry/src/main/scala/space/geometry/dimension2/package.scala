@@ -14,7 +14,6 @@ with ArrowOps {
     def radians: ArbitraryRadians = ArbitraryRadians(x)
 
     def *(vector: Vector): Vector = vector * x
-
   }
 
   type RotationDirection = Sign
@@ -22,5 +21,4 @@ with ArrowOps {
   val Clockwise: RotationDirection = Negative
 
   val Counterclockwise: RotationDirection = Positive
-
 }

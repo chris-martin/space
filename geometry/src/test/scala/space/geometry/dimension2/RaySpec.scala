@@ -30,7 +30,5 @@ class RaySpec extends org.scalatest.FreeSpec with ApproximationTesting {
         =~ PointAndCircleAngle(source = xy(4, 5), angle = (Pi/2).radians)
       )
     }
-
   }
-
 }

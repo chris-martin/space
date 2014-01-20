@@ -18,7 +18,5 @@ class TriangleSpec extends org.scalatest.FreeSpec with ApproximationTesting {
 
     "It calculates the area of its interior" in
     { assert ( △(Origin, xy(0, 1), xy(1, 0)).interior.area =~ .5 ) }
-
   }
-
 }

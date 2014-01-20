@@ -7,14 +7,12 @@ trait ArrowOps {
     def →(b: Right): Result
 
     def ->(b: Right): Result = →(b)
-
   }
 
   implicit class ArrowVectorToVector(left: Vector)
   extends ArrowOperator[Vector, TwoPoints] {
 
     override def →(right: Vector): TwoPoints = TwoPoints(left, right)
-
   }
 
   implicit class ArrowVectorToLineLike(vector: Vector)
@@ -22,7 +20,6 @@ trait ArrowOps {
 
     override def →(line: LineLike): TwoPoints =
     vector → (line pointClosestTo vector)
-
   }
 
   implicit class ArrowLineLikeToVector(line: LineLike)
@@ -30,7 +27,5 @@ trait ArrowOps {
 
     override def →(vector: Vector): TwoPoints =
     (line pointClosestTo vector) → vector
-
   }
-
 }

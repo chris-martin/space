@@ -27,13 +27,11 @@ trait Angle[A <: Angle[A]] extends Any {
   def /(s: Double): A = companion(toDouble / s)
 
   def unary_- : A = companion(-toDouble)
-
 }
 
 object Angle extends ArbitraryRadiansCompanion {
 
   def apply(a: Vector, b: Vector, c: Vector): SemicircleRadians = ???
-
 }
 
 trait AngleCompanion[A] {
@@ -43,7 +41,6 @@ trait AngleCompanion[A] {
   def halfCircle: A = apply(Pi)
 
   def circle: A = apply(twoPi)
-
 }
 
 class ArbitraryRadians (val toDouble: Double)
@@ -53,13 +50,11 @@ extends AnyVal with Angle[ArbitraryRadians] {
   ArbitraryRadians
 
   override def toString = "ArbitraryRadians(%f)" format toDouble
-
 }
 
 trait ArbitraryRadiansCompanion extends AngleCompanion[ArbitraryRadians] {
 
   override def apply(a: Double): ArbitraryRadians = new ArbitraryRadians(a)
-
 }
 
 object ArbitraryRadians extends ArbitraryRadiansCompanion {
@@ -69,7 +64,6 @@ object ArbitraryRadians extends ArbitraryRadiansCompanion {
 
   implicit def toSemicircle(x: ArbitraryRadians): SemicircleRadians =
   SemicircleRadians(x.toDouble)
-
 }
 
 /** @param toDouble in the range [-Pi, Pi)
@@ -83,7 +77,6 @@ extends AnyVal with Angle[CircleRadians] {
   CircleRadians
 
   override def toString = "CircleRadians(%f)" format toDouble
-
 }
 
 object CircleRadians extends AngleCompanion[CircleRadians] {
@@ -101,7 +94,6 @@ object CircleRadians extends AngleCompanion[CircleRadians] {
 
   implicit def toSemicircle(x: CircleRadians): SemicircleRadians =
   SemicircleRadians(x.toDouble)
-
 }
 
 /** @param toDouble in the range [0, Pi)
@@ -121,7 +113,6 @@ Angle[SemicircleRadians] {
   SemicircleRadians
 
   override def toString = "SemicircleRadians(%f)" format toDouble
-
 }
 
 object SemicircleRadians extends AngleCompanion[SemicircleRadians] {
@@ -135,5 +126,4 @@ object SemicircleRadians extends AngleCompanion[SemicircleRadians] {
 
   def apply(x: Double, y: Double): SemicircleRadians =
   SemicircleRadians(math.atan2(y, x))
-
 }

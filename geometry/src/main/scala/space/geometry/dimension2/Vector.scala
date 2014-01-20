@@ -28,7 +28,6 @@ trait Vector {
   def /(s: Double): Vector
 
   def rotate(a: ArbitraryRadians): Vector
-
 }
 
 /** A two-dimensional vector defined by X and Y coordinates.
@@ -54,7 +53,6 @@ sealed case class CartesianVector(x: Double, y: Double) extends Vector {
   override def /(s: Double): CartesianVector = new CartesianVector ( x/s, y/s )
 
   override def rotate(a: ArbitraryRadians): PolarVector = toPolar.rotate(a)
-
 }
 
 case class PolarVector(magnitude: Double, angle: CircleRadians) extends
@@ -79,7 +77,6 @@ Vector {
 
   override def rotate(a: ArbitraryRadians): PolarVector =
   PolarVector(magnitude, angle + a)
-
 }
 
 object Origin extends Vector {
@@ -108,5 +105,4 @@ object Origin extends Vector {
   override def /(s: Double): this.type = this
 
   override def rotate(a: ArbitraryRadians): this.type = this
-
 }

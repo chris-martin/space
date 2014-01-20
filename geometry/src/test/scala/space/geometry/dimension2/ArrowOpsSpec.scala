@@ -13,5 +13,4 @@ class ArrowOpsSpec extends org.scalatest.FreeSpec with ApproximationTesting {
   "The arrow from a line to a vector is the shortest segment" in
   { assert ( (DoubleRay(Origin, Angle(Pi/4)) → xy(3, 1))
   =~ (xy(2, 2) → xy(3, 1)) ) }
-
 }

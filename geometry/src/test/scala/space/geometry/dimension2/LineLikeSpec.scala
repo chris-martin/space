@@ -14,9 +14,6 @@ class LineLikeSpec extends org.scalatest.FreeSpec with ApproximationTesting {
         doubleray.rotate((-3*Pi/6).radians)
         =~ PointAndSemicircleAngle(pivot = xy(4, 5), angle = (Pi-Pi/6).radians)
       )
-
     }
-
   }
-
 }

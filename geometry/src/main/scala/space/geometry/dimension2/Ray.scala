@@ -27,19 +27,16 @@ trait Ray {
 
   def toPointAndCircleAngle: PointAndCircleAngle =
     PointAndCircleAngle(source, angle)
-
 }
 
 object Ray {
 
   def apply(source: Vector, angle: CircleRadians): PointAndCircleAngle =
     PointAndCircleAngle(source, angle)
-
 }
 
 sealed case class PointAndCircleAngle(source: Vector, angle: CircleRadians)
   extends Ray {
 
   override def toPointAndCircleAngle: PointAndCircleAngle = this
-
 }

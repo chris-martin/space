@@ -20,7 +20,6 @@ trait Triangle { self =>
   protected trait Self extends Triangle.Has {
     override def triangle: Triangle = self
   }
-
 }
 
 object Triangle {
@@ -31,23 +30,19 @@ object Triangle {
   trait Has {
 
     def triangle: Triangle
-
   }
 
   trait Perimeter extends Has {
 
     def length: Double
-
   }
 
   trait Interior extends Has {
 
     def area: Double
-
   }
 
   trait Exterior extends Has
-
 }
 
 sealed case class ThreePoints(a: Vector, b: Vector, c: Vector) extends
@@ -83,15 +78,12 @@ Triangle { self =>
       case e if e < (a→b).length => (a→b).toRay.segment(e).destination
       case e => shift.perimeter.traverse(e - (a→b).length)
     }
-
   }
 
   object interior extends Triangle.Interior with Self {
 
     override def area: Double = (a→b).length * ((a→b).toLine → c).length / 2
-
   }
 
   object exterior extends Triangle.Exterior with Self
-
 }

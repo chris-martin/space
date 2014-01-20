@@ -41,7 +41,6 @@ trait Line extends LineLike {
   override def angle: SemicircleRadians = arbitraryDoubleRay.angle
 
   override def toLine: Line = this
-
 }
 
 /** A line, and a point (the "pivot") on that line.
@@ -70,19 +69,16 @@ trait DoubleRay extends LineLike { self =>
   override def toLine: Line = new Line {
 
     override def arbitraryDoubleRay = self
-
   }
 
   def toPointAndSemicircleAngle: PointAndSemicircleAngle =
   PointAndSemicircleAngle(pivot = pivot, angle = angle)
-
 }
 
 object DoubleRay {
 
   def apply(pivot: Vector, angle: SemicircleRadians): PointAndSemicircleAngle =
   PointAndSemicircleAngle(pivot, angle)
-
 }
 
 sealed case class PointAndSemicircleAngle(pivot: Vector, angle:
@@ -92,5 +88,4 @@ SemicircleRadians) extends DoubleRay {
 
   override def rotate(a: ArbitraryRadians): PointAndSemicircleAngle =
   DoubleRay(pivot, angle + a)
-
 }
