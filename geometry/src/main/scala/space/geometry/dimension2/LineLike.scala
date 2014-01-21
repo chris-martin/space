@@ -43,6 +43,11 @@ trait Line extends LineLike {
   override def toLine: Line = this
 }
 
+object Line {
+
+  def apply(a: Vector, b: Vector): Line = LineSegment(a, b).toLine
+}
+
 /** A line, and a point (the "pivot") on that line.
   *
   * {{{    ◂--●--▸    }}}
@@ -64,7 +69,7 @@ trait DoubleRay extends LineLike { self =>
 
   /** Rotation about the pivot. The resulting `DoubleRay` has the same pivot.
     */
-  def rotate(a: ArbitraryRadians): DoubleRay
+  def rotate(a: AnyRadians): DoubleRay
 
   override def toLine: Line = new Line {
 
@@ -86,6 +91,6 @@ SemicircleRadians) extends DoubleRay {
 
   override def toPointAndSemicircleAngle: PointAndSemicircleAngle = this
 
-  override def rotate(a: ArbitraryRadians): PointAndSemicircleAngle =
+  override def rotate(a: AnyRadians): PointAndSemicircleAngle =
   DoubleRay(pivot, angle + a)
 }

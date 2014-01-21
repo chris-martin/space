@@ -35,14 +35,21 @@ object Triangle {
   trait Perimeter extends Has {
 
     def length: Double
+
+    override def toString: String = s"Triangle.Perimeter($triangle)"
   }
 
   trait Interior extends Has {
 
     def area: Double
+
+    override def toString: String = s"Triangle.Interior($triangle)"
   }
 
-  trait Exterior extends Has
+  trait Exterior extends Has {
+
+    override def toString: String = s"Triangle.Exterior($triangle)"
+  }
 }
 
 sealed case class ThreePoints(a: Vector, b: Vector, c: Vector) extends

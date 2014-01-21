@@ -51,4 +51,21 @@ trait SampleOps {
       (1-r1.squareRoot)*a + r1.squareRoot*(1-r2)*b + r1.squareRoot*r2*c
     }
   }
+
+  implicit class SamplePointInsideARectangle(interior: Rectangle.Interior) {
+
+    def sample()(implicit random: Random): Vector = {
+      interior.rectangle match {
+
+        case rectangle: OrthogonalRectangle =>
+          xy(rectangle.perimeter.bottom.sample().x,
+             rectangle.perimeter.left.sample().y)
+
+        case rectangle =>
+          var t = rectangle.arbitraryDiagonalAndCorner
+          if (random.nextBoolean()) t = t.flipCorner
+          t.interior.sample
+      }
+    }
+  }
 }
