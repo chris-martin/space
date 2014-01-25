@@ -8,7 +8,7 @@ sealed class ColorValue private (val toDouble: Double) {
 object ColorValue {
 
   implicit def apply(x: Double): ColorValue =
-  new ColorValue( if (x <= 0) 0 else if (x >= 1) 1 else x )
+    new ColorValue( if (x <= 0) 0 else if (x >= 1) 1 else x )
 
   implicit def toDouble(c: ColorValue): Double = c.toDouble
 }

@@ -6,7 +6,7 @@ sealed case class Translucent[+C <: Color]
 trait TranslucentCompanion[C <: Color] {
 
   def apply(opaque: C, alpha: ColorValue): Translucent[C] =
-  Translucent(opaque, alpha)
+    Translucent(opaque, alpha)
 
   def OpaqueCompanion: ColorCompanion[C]
 

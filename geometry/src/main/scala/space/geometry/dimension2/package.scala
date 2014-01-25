@@ -1,7 +1,7 @@
 package space.geometry
 
 package object dimension2 extends Object with Approximations with SampleOps
-with ArrowOps {
+    with ArrowOps {
 
   type Radians = GenRadians[_]
 

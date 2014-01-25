@@ -3,7 +3,7 @@ package space.color
 import scala.math.abs
 
 sealed case class RGB(red: ColorValue, green: ColorValue, blue: ColorValue)
-extends Color with SpecificColorType[RGB] {
+    extends Color with SpecificColorType[RGB] {
 
   def values = Seq(red, green, blue)
 
@@ -41,13 +41,13 @@ extends Color with SpecificColorType[RGB] {
 object RGB extends Object with ColorCompanion[RGB] {
 
   override def apply(v1: Double, v2: Double, v3: Double): RGB =
-  apply(v1: ColorValue, v2: ColorValue, v3: ColorValue)
+    apply(v1: ColorValue, v2: ColorValue, v3: ColorValue)
 }
 
 object RGBA extends TranslucentCompanion[RGB] {
 
-  def OpaqueCompanion = RGB
+  override def OpaqueCompanion = RGB
 
   def apply(red: ColorValue, green: ColorValue, blue: ColorValue,
-  alpha: ColorValue): RGBA = apply(RGB(red, green, blue), alpha)
+    alpha: ColorValue): RGBA = apply(RGB(red, green, blue), alpha)
 }

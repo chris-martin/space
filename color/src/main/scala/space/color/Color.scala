@@ -7,13 +7,13 @@ trait Color { self =>
   def toHSL: HSL
 
   def withAlpha(alpha: ColorValue): Translucent[_] =
-  Translucent(self, alpha)
+    Translucent(self, alpha)
 }
 
 trait SpecificColorType[C <: Color] { self: Color =>
 
   override def withAlpha(alpha: ColorValue): Translucent[C] =
-  Translucent(self, alpha)
+    Translucent(self, alpha)
 }
 
 trait ColorCompanion[C <: Color] {

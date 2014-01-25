@@ -11,9 +11,9 @@ package dimension2
 object Radians extends AnyRadiansCompanion {
 
   def apply(a: Vector, b: Vector, c: Vector): SemicircleRadians = {
-    val A = (b→c).length
-    val B = (c→a).length
-    val C = (a→b).length
+    val A = (b → c).length
+    val B = (c → a).length
+    val C = (a → b).length
     SemicircleRadians(math.acos((A*A + C*C - B*B) / (2*A*C)))
   }
 }
@@ -51,10 +51,9 @@ trait RadiansCompanion[A] {
 }
 
 class AnyRadians (val toDouble: Double) extends AnyVal
-with GenRadians[AnyRadians] {
+    with GenRadians[AnyRadians] {
 
-  override protected def companion: RadiansCompanion[AnyRadians] =
-  AnyRadians
+  override protected def companion: RadiansCompanion[AnyRadians] = AnyRadians
 
   override def toString = "AnyRadians($toDouble)"
 }
@@ -67,23 +66,23 @@ trait AnyRadiansCompanion extends RadiansCompanion[AnyRadians] {
 object AnyRadians extends AnyRadiansCompanion {
 
   implicit def toCircle(x: AnyRadians): CircleRadians =
-  CircleRadians(x.toDouble)
+    CircleRadians(x.toDouble)
 
   implicit def toSemicircle(x: AnyRadians): SemicircleRadians =
-  SemicircleRadians(x.toDouble)
+    SemicircleRadians(x.toDouble)
 }
 
 /** @param toDouble in the range [-Pi, Pi)
   */
 class CircleRadians private (val toDouble: Double)
-extends AnyVal with GenRadians[CircleRadians] {
+    extends AnyVal with GenRadians[CircleRadians] {
 
   def sign: Sign = if (toDouble > 0) Positive else Negative
 
   def toAnyRadiansArbitrarily: AnyRadians = AnyRadians(toDouble)
 
   override protected def companion: RadiansCompanion[CircleRadians] =
-  CircleRadians
+    CircleRadians
 
   override def toString = s"CircleRadians($toDouble)"
 }
@@ -96,44 +95,45 @@ object CircleRadians extends RadiansCompanion[CircleRadians] {
   })
 
   def apply(x: Double, y: Double): CircleRadians =
-  new CircleRadians(math.atan2(y, x))
+    new CircleRadians(math.atan2(y, x))
 
   implicit def toSemicircle(x: CircleRadians): SemicircleRadians =
-  SemicircleRadians(x.toDouble)
+    SemicircleRadians(x.toDouble)
 }
 
 /** @param toDouble in the range [0, Pi)
   */
-class SemicircleRadians private (val toDouble: Double) extends AnyVal with
-GenRadians[SemicircleRadians] {
+class SemicircleRadians private (val toDouble: Double) extends AnyVal
+    with GenRadians[SemicircleRadians] {
 
   def orthogonal: SemicircleRadians = this + Radians(Pi/2)
 
   def toCircleRadians(sign: Sign): CircleRadians =
-  CircleRadians(sign match {
-    case Positive => toDouble
-    case Negative => toDouble - Pi
-  })
+    CircleRadians(sign match {
+      case Positive => toDouble
+      case Negative => toDouble - Pi
+    })
 
   def toCircleRadiansArbitrarily: CircleRadians = CircleRadians(toDouble)
 
   def toAnyRadiansArbitrarily: AnyRadians = AnyRadians(toDouble)
 
   override protected def companion: RadiansCompanion[SemicircleRadians] =
-  SemicircleRadians
+    SemicircleRadians
 
   override def toString = s"SemicircleRadians($toDouble)"
 }
 
 object SemicircleRadians extends RadiansCompanion[SemicircleRadians] {
 
-  override def apply(a: Double): SemicircleRadians = new SemicircleRadians({
-    val b = a % Pi
-    if (b < 0) b + Pi else b
-  })
+  override def apply(a: Double): SemicircleRadians =
+    new SemicircleRadians({
+      val b = a % Pi
+      if (b < 0) b + Pi else b
+    })
 
   def apply(x: Double, y: Double): SemicircleRadians =
-  SemicircleRadians(math.atan2(y, x))
+    SemicircleRadians(math.atan2(y, x))
 }
 
 /** An angle that is a multiple of Pi/2.

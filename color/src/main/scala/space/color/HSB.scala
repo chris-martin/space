@@ -3,7 +3,7 @@ package space.color
 import scala.math.abs
 
 sealed case class HSB(hue: Hue, saturation: ColorValue,
-brightness: ColorValue) extends Color with SpecificColorType[HSB] {
+    brightness: ColorValue) extends Color with SpecificColorType[HSB] {
 
   private def chroma: Double = brightness * saturation
 
@@ -34,13 +34,14 @@ brightness: ColorValue) extends Color with SpecificColorType[HSB] {
 object HSB extends ColorCompanion[HSB] {
 
   override def apply(v1: Double, v2: Double, v3: Double): HSB =
-  apply(v1: Hue, v2: ColorValue, v3: ColorValue)
+    apply(v1: Hue, v2: ColorValue, v3: ColorValue)
 }
 
 object HSBA extends TranslucentCompanion[HSB] {
 
-  def OpaqueCompanion = HSB
+  override def OpaqueCompanion = HSB
 
-  def apply(hue: ColorValue, saturation: ColorValue, brightness: ColorValue,
-  alpha: ColorValue): HSBA = apply(HSB(hue, saturation, brightness), alpha)
+  def apply(hue: ColorValue, saturation: ColorValue,
+      brightness: ColorValue, alpha: ColorValue): HSBA =
+    apply(HSB(hue, saturation, brightness), alpha)
 }

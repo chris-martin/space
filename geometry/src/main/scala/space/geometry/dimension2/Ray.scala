@@ -17,7 +17,7 @@ trait Ray {
     * as this ray.
     */
   def segment(length: Double): RaySegment =
-  PointDifference(source, PolarVector(length, angle))
+    PointDifference(source, PolarVector(length, angle))
 
   /** A ray segment that has the same source as this ray.
     */
@@ -30,7 +30,7 @@ trait Ray {
   def toLine: Line = toDoubleRay.toLine
 
   def toPointAndCircleAngle: PointAndCircleAngle =
-  PointAndCircleAngle(source, angle)
+    PointAndCircleAngle(source, angle)
 
   /** If you walk the line on which this ray lies, in the direction
     * in which the ray points, do you see `x` on your left or your right?
@@ -41,14 +41,14 @@ trait Ray {
 object Ray {
 
   def apply(source: Vector, angle: CircleRadians): PointAndCircleAngle =
-  PointAndCircleAngle(source, angle)
+    PointAndCircleAngle(source, angle)
 }
 
 sealed case class PointAndCircleAngle(source: Vector, angle: CircleRadians)
-extends Ray {
+    extends Ray {
 
   override def toPointAndCircleAngle: PointAndCircleAngle = this
 
   override def side(x: Vector): Side =
-  if (((x - source) cross arbitrarySegment.difference) > 0) Left else Right
+    if (((x - source) cross arbitrarySegment.difference) > 0) Left else Right
 }

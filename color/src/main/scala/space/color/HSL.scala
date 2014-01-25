@@ -3,7 +3,7 @@ package space.color
 import math.abs
 
 sealed case class HSL(hue: Hue, saturation: ColorValue,
-lightness: ColorValue) extends Color with SpecificColorType[HSL] {
+    lightness: ColorValue) extends Color with SpecificColorType[HSL] {
 
   private def chroma: Double = saturation * (1 - abs(2 * lightness - 1))
 
@@ -39,8 +39,9 @@ object HSL extends ColorCompanion[HSL] {
 
 object HSLA extends TranslucentCompanion[HSL] {
 
-  def OpaqueCompanion = HSL
+  override def OpaqueCompanion = HSL
 
-  def apply(hue: ColorValue, saturation: ColorValue, brightness: ColorValue,
-  alpha: ColorValue): HSLA = apply(HSL(hue, saturation, brightness), alpha)
+  def apply(hue: ColorValue, saturation: ColorValue,
+      brightness: ColorValue, alpha: ColorValue): HSLA =
+    apply(HSL(hue, saturation, brightness), alpha)
 }

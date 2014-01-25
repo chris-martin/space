@@ -8,10 +8,10 @@ trait SampleOps {
   implicit class SampleVectorFromRaySegment(segment: RaySegment) {
 
     def sample()(implicit random: Random): Vector =
-    segment.source + PolarVector(
-      magnitude = random.nextDouble() * segment.length,
-      angle = segment.angle
-    )
+      segment.source + PolarVector(
+        magnitude = random.nextDouble() * segment.length,
+        angle = segment.angle
+      )
   }
 
   implicit class SampleVectorFromLineSegment(segment: LineSegment) {
@@ -23,10 +23,10 @@ trait SampleOps {
   implicit class SamplePointOnACircle(circle: Circle) {
 
     def sample()(implicit random: Random): Vector =
-    circle.center + PolarVector(
-      magnitude = circle.radius,
-      angle = CircleRadians(random.nextDouble() * twoPi)
-    )
+      circle.center + PolarVector(
+        magnitude = circle.radius,
+        angle = CircleRadians(random.nextDouble() * twoPi)
+      )
   }
 
   implicit class SamplePointOnATriangle(triangle: Triangle) {
@@ -34,12 +34,13 @@ trait SampleOps {
     val perimeter = triangle.arbitrarilyDirected.perimeter
 
     def sample()(implicit random: Random): Vector =
-    perimeter traverse (random.nextDouble() * perimeter.length)
+      perimeter traverse (random.nextDouble() * perimeter.length)
   }
 
   implicit class SamplePointInsideATriangle(interior: Triangle.Interior) {
 
     val triangle = interior.triangle.arbitrarilyDirected
+
     import triangle.{a, b, c}
 
     /** Shape Distributions (2002) by Robert Osada, Thomas Funkhouser,
@@ -54,7 +55,8 @@ trait SampleOps {
 
   implicit class SamplePointInsideARectangle(interior: Rectangle.Interior) {
 
-    def sample()(implicit random: Random): Vector = {
+    def sample()(implicit random: Random): Vector =
+
       interior.rectangle match {
 
         case rectangle: OrthogonalRectangle =>
@@ -66,6 +68,5 @@ trait SampleOps {
           if (random.nextBoolean()) t = t.flipCorner
           t.interior.sample
       }
-    }
   }
 }

@@ -17,7 +17,7 @@ trait LineSegmentLike {
     * midpoint.
     */
   def bisector: DoubleRay =
-  DoubleRay(pivot = midpoint, angle = (angle.toDouble + Pi/2).radians)
+    DoubleRay(pivot = midpoint, angle = (angle.toDouble + Pi/2).radians)
 
   /** The minimum-radius circle containing both endpoints.
     */
@@ -51,7 +51,7 @@ trait LineSegment extends LineSegmentLike {
   def arbitrarilyDirected: RaySegment = directed(Positive)
 
   override def rotate(angle: AnyRadians): LineSegment =
-  rotate(angle, midpoint)
+    rotate(angle, midpoint)
 
   override def rotate(angle: AnyRadians, pivot: Vector): LineSegment
 
@@ -61,13 +61,13 @@ trait LineSegment extends LineSegmentLike {
   def toDoubleRay: DoubleRay = PointAndSemicircleAngle(midpoint, angle)
 
   def withLength(newLength: Double): LineSegment =
-  toDoubleRay.toLineSegment(newLength)
+    toDoubleRay.toLineSegment(newLength)
 }
 
 object LineSegment {
 
   def apply(a: Vector, b: Vector): LineSegment =
-  TwoPoints(a, b).toLineSegment
+    TwoPoints(a, b).toLineSegment
 }
 
 /** {{{    ●--▸●    }}}
@@ -100,7 +100,7 @@ trait RaySegment extends LineSegmentLike { self =>
   def toLineSegment: LineSegment = new LineSegment {
 
     override def directed(angleSign: Sign): RaySegment =
-    self.withAngleSign(angleSign)
+      self.withAngleSign(angleSign)
 
     override def length: Double = self.length
 
@@ -109,18 +109,18 @@ trait RaySegment extends LineSegmentLike { self =>
     override def toLine: Line = self.toLine
 
     override def rotate(angle: AnyRadians, pivot: Vector): LineSegment =
-    self.rotate(angle, pivot).toLineSegment
+      self.rotate(angle, pivot).toLineSegment
 
     override def toString: String = s"LineSegment($self)"
   }
 
   def withAngleSign(angleSign: Sign): RaySegment =
-  if (angle.sign == angleSign) this else reverse
+    if (angle.sign == angleSign) this else reverse
 
   override def toLine: Line = new Line {
 
     override def arbitraryDoubleRay: DoubleRay =
-    DoubleRay(pivot = self.source, angle = self.angle)
+      DoubleRay(pivot = self.source, angle = self.angle)
 
     override def toString: String = s"Line($self)"
   }
@@ -161,29 +161,29 @@ object RaySegment {
 }
 
 sealed case class TwoPoints(source: Vector, destination: Vector)
-extends RaySegment {
+    extends RaySegment {
 
   override def toTwoPoints: TwoPoints = this
 
   override def difference: Vector = destination - source
 
   override def reverse: TwoPoints =
-  TwoPoints(source = destination, destination = source)
+    TwoPoints(source = destination, destination = source)
 
   override def rotate(angle: AnyRadians, pivot: Vector): TwoPoints =
-  TwoPoints(source.rotate(angle, pivot), destination.rotate(angle, pivot))
+    TwoPoints(source.rotate(angle, pivot), destination.rotate(angle, pivot))
 }
 
 sealed case class PointDifference(source: Vector, difference: Vector)
-extends RaySegment {
+    extends RaySegment {
 
   override def toPointDifference: PointDifference = this
 
   override def destination: Vector = source + difference
 
   override def reverse: PointDifference =
-  PointDifference(destination, -difference)
+    PointDifference(destination, -difference)
 
   override def rotate(angle: AnyRadians, pivot: Vector): PointDifference =
-  PointDifference(source.rotate(angle, pivot), difference.rotate(angle))
+    PointDifference(source.rotate(angle, pivot), difference.rotate(angle))
 }

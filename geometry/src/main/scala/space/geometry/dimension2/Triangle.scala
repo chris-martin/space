@@ -21,7 +21,7 @@ trait Triangle { self =>
 object Triangle {
 
   def apply(a: Vector, b: Vector, c: Vector): ThreePoints =
-  ThreePoints(a, b, c)
+    ThreePoints(a, b, c)
 
   trait Has {
 
@@ -48,13 +48,13 @@ object Triangle {
   }
 }
 
-sealed case class ThreePoints(a: Vector, b: Vector, c: Vector) extends
-Triangle {
+sealed case class ThreePoints(a: Vector, b: Vector, c: Vector)
+    extends Triangle {
 
   override def arbitrarilyDirected: ThreePoints = this
 
   override def directed(direction: RotationDirection) =
-  if (direction == this.direction) this else reverse
+    if (direction == this.direction) this else reverse
 
   def direction: RotationDirection = ???
 
@@ -68,10 +68,11 @@ Triangle {
 
   override def circumcenter: Option[Vector] = (a→b).bisector ∩ (b→c).bisector
 
-  override def circumcircle: Circle = circumcenter match {
-    case Some(x) => Circle(center = x, radius = (a→x).length)
-    case None => edges.maxBy(_.length).circumcircle
-  }
+  override def circumcircle: Circle =
+    circumcenter match {
+      case Some(x) => Circle(center = x, radius = (a→x).length)
+      case None => edges.maxBy(_.length).circumcircle
+    }
 
   override val perimeter = ThreePoints.Perimeter(this)
 
@@ -83,16 +84,17 @@ Triangle {
 object ThreePoints {
 
   sealed case class Perimeter(triangle: ThreePoints)
-  extends Triangle.Perimeter {
+      extends Triangle.Perimeter {
 
     import triangle._
 
     override def length: Double = edges.map(_.length).sum
 
-    def traverse(d: Double): Vector = d % length match {
-      case e if e < (a→b).length => (a→b).toRay.segment(e).destination
-      case e => shift.perimeter.traverse(e - (a→b).length)
-    }
+    def traverse(d: Double): Vector =
+      d % length match {
+        case e if e < (a→b).length => (a→b).toRay.segment(e).destination
+        case e => shift.perimeter.traverse(e - (a→b).length)
+      }
   }
 
   sealed case class Interior(triangle: ThreePoints) extends Triangle.Interior {
