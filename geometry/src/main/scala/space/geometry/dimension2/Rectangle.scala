@@ -167,6 +167,16 @@ sealed case class OrthogonalRectangle(center: Point,
   private lazy val dx = sizeX / 2
   private lazy val dy = sizeY / 2
 
+  def minX: Double = center.x - dx
+  def maxX: Double = center.x + dx
+  def minY: Double = center.y - dy
+  def maxY: Double = center.y + dy
+
+  def left   : Double = minX
+  def right  : Double = maxX
+  def bottom : Double = minY
+  def top    : Double = maxY
+
   override def arbitraryDiagonal: LineSegment =
     LineSegment(
       xy(center.x - dx, center.y - dy),
@@ -218,23 +228,23 @@ object OrthogonalRectangle {
     override def length = 2 * (sizeX + sizeY)
 
     def bottom: LineSegment = LineSegment(
-      xy( center.x - dx, center.y - dy ),
-      xy( center.x + dx, center.y - dy )
+      xy( rectangle.left, rectangle.bottom ),
+      xy( rectangle.right, rectangle.bottom )
     )
 
     def top: LineSegment = LineSegment(
-      xy( center.x - dx, center.y + dy ),
-      xy( center.x + dx, center.y + dy )
+      xy( rectangle.left, rectangle.top ),
+      xy( rectangle.right, rectangle.top )
     )
 
     def left: LineSegment = LineSegment(
-      xy( center.x - dx, center.y + dy ),
-      xy( center.x - dx, center.y - dy )
+      xy( rectangle.left, rectangle.top ),
+      xy( rectangle.left, rectangle.bottom )
     )
 
     def right: LineSegment = LineSegment(
-      xy( center.x + dx, center.y + dy ),
-      xy( center.x + dx, center.y - dy )
+      xy( rectangle.right, rectangle.top ),
+      xy( rectangle.right, rectangle.bottom )
     )
   }
 
