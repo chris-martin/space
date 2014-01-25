@@ -78,6 +78,11 @@ trait DoubleRay extends LineLike { self =>
 
   def toPointAndSemicircleAngle: PointAndSemicircleAngle =
   PointAndSemicircleAngle(pivot = pivot, angle = angle)
+
+  /** A line segment lying on the same line as this ray segment, with
+    * its midpoint at the ray segments pivot, having length `length`.
+    */
+  def toLineSegment(length: Double): LineSegment
 }
 
 object DoubleRay {
@@ -92,5 +97,12 @@ SemicircleRadians) extends DoubleRay {
   override def toPointAndSemicircleAngle: PointAndSemicircleAngle = this
 
   override def rotate(a: AnyRadians): PointAndSemicircleAngle =
-  DoubleRay(pivot, angle + a)
+  PointAndSemicircleAngle(pivot, angle + a)
+
+  override def toLineSegment(length: Double): LineSegment = {
+
+    val offset = PolarVector(length/2, angle.toCircleRadiansArbitrarily)
+
+    TwoPoints(pivot - offset, pivot + offset).toLineSegment
+  }
 }

@@ -1,7 +1,7 @@
 package space.geometry
 package dimension2
 
-trait Rectangle { self =>
+trait Rectangle {
 
   def center: Vector
 
@@ -10,22 +10,20 @@ trait Rectangle { self =>
   def arbitraryDiagonalAndCorner: DiagonalAndCornerRectangle
 
   /** Rotation about the center.
-   */
+    */
   def rotate(angle: AnyRadians): Rectangle
 
   /** Rotation about a pivot.
-   */
+    */
   def rotate(angle: AnyRadians, pivot: Vector): Rectangle
+
+  def pad(padding: Double): Rectangle
 
   def perimeter: Rectangle.Perimeter
 
   def interior: Rectangle.Interior
 
   def exterior: Rectangle.Exterior
-
-  protected trait Self extends Rectangle.Has {
-    override def rectangle: Rectangle = self
-  }
 }
 
 object Rectangle {
@@ -45,6 +43,31 @@ object Rectangle {
   trait Interior extends Has {
 
     def area: Double
+
+    /** The interior of a rectangle that has the same center and proportions
+      * as this one, scaled to an area of `newArea`.
+      */
+    def area(newArea: Double): Interior
+
+    /** The interior of a rectangle that has the same center and proportions
+      * as this one, scaled to an area of `area + additionalArea`.
+      */
+    def +(additionalArea: Double): Interior = area(area + additionalArea)
+
+    /** The interior of a rectangle that has the same center and proportions
+      * as this one, scaled to an area of `area + removedArea`.
+      */
+    def -(removedArea: Double): Interior = area(area - removedArea)
+
+    /** The interior of a rectangle that has the same center and proportions
+      * as this one, scaled to an area of `area * areaFactor`.
+      */
+    def *(areaFactor: Double): Interior = area(area * areaFactor)
+
+    /** The interior of a rectangle that has the same center and proportions
+      * as this one, scaled to an area of `area / areaDivisor`.
+      */
+    def /(areaDivisor: Double): Interior = area(area / areaDivisor)
 
     override def toString: String = s"Rectangle.Interior($rectangle)"
   }
@@ -80,22 +103,61 @@ diagonal: LineSegment, corner: Vector) extends Rectangle {
   def flipCorner: DiagonalAndCornerRectangle =
   DiagonalAndCornerRectangle(diagonal, otherCorner)
 
-  object perimeter extends Rectangle.Perimeter with Self {
+  override def pad(padding: Double): this.type = ???
 
-    override def length = 2 *
+  override val perimeter = DiagonalAndCornerRectangle.Perimeter(this)
+
+  override val interior = DiagonalAndCornerRectangle.Interior(this)
+
+  override val exterior = DiagonalAndCornerRectangle.Exterior(this)
+}
+
+object DiagonalAndCornerRectangle {
+
+  sealed case class Perimeter(rectangle: DiagonalAndCornerRectangle)
+  extends Rectangle.Perimeter {
+
+    import rectangle._
+
+    override def length: Double = 2 *
     diagonal.arbitrarilyDirected.toSeq.map(p => (p → corner).length).sum
   }
 
-  object interior extends Rectangle.Interior with Self {
+  sealed case class Interior(rectangle: DiagonalAndCornerRectangle)
+  extends Rectangle.Interior {
+
+    import rectangle._
 
     override def area: Double = {
+
       val d = diagonal.arbitrarilyDirected
+
       val triangle = Triangle(d.source, d.destination, corner)
+
       2 * triangle.interior.area
+    }
+
+    override def area(newArea: Double): DiagonalAndCornerRectangle.Interior = {
+
+      val (a, b) = {
+
+        val (a, b) = diagonal.arbitrarilyDirected.toTuple
+
+        ((a → corner).length, (b → corner).length)
+      }
+
+      val newDiagonalLength = sqrt(newArea * (a/b + b/a))
+
+      DiagonalAndCornerRectangle(
+        diagonal = diagonal withLength newDiagonalLength,
+        corner = (flipCorner.diagonal withLength newDiagonalLength)
+        .arbitrarilyDirected.source
+      ).interior
     }
   }
 
-  object exterior extends Rectangle.Exterior with Self
+  sealed case class Exterior(rectangle: DiagonalAndCornerRectangle)
+  extends Rectangle.Exterior
 }
 
 sealed case class OrthogonalRectangle(center: Vector,
@@ -125,7 +187,26 @@ sizeX: Double, sizeY: Double) extends Rectangle {
   override def rotate(angle: AnyRadians, pivot: Vector):
   Rectangle = arbitraryDiagonalAndCorner.rotate(angle, pivot)
 
-  object perimeter extends Rectangle.Perimeter with Self {
+  override def pad(padding: Double): OrthogonalRectangle = OrthogonalRectangle(
+  center = center, sizeX = sizeX + 2*padding, sizeY = sizeY + 2*padding)
+
+  override val perimeter = OrthogonalRectangle.Perimeter(this)
+
+  override val interior = OrthogonalRectangle.Interior(this)
+
+  override val exterior = OrthogonalRectangle.Exterior(this)
+}
+
+object OrthogonalRectangle {
+
+  def apply(c1: Vector, c2: Vector): OrthogonalRectangle =
+  OrthogonalRectangle(center = (c1->c2).midpoint,
+  sizeX = math.abs(c1.x - c2.x), sizeY = math.abs(c1.y - c2.y))
+
+  sealed case class Perimeter(rectangle: OrthogonalRectangle)
+  extends Rectangle.Perimeter {
+
+    import rectangle._
 
     override def length = 2 * (sizeX + sizeY)
 
@@ -146,19 +227,26 @@ sizeX: Double, sizeY: Double) extends Rectangle {
     xy(center.x + dx, center.y - dy))
   }
 
-  object interior extends Rectangle.Interior with Self {
+  sealed case class Interior(rectangle: OrthogonalRectangle)
+  extends Rectangle.Interior {
+
+    import rectangle._
 
     override def area: Double = sizeX * sizeY
+
+    override def area(newArea: Double): OrthogonalRectangle.Interior = {
+
+      val newSizeX = sqrt(sizeX * newArea / sizeY)
+
+      val newSizeY = newArea / newSizeX
+
+      OrthogonalRectangle(center = center, sizeX = newSizeX,
+      sizeY = newSizeY).interior
+    }
   }
 
-  object exterior extends Rectangle.Exterior with Self
-}
-
-object OrthogonalRectangle {
-
-  def apply(c1: Vector, c2: Vector): OrthogonalRectangle =
-  OrthogonalRectangle(center = (c1->c2).midpoint,
-  sizeX = math.abs(c1.x - c2.x), sizeY = math.abs(c1.y - c2.y))
+  sealed case class Exterior(rectangle: OrthogonalRectangle)
+  extends Rectangle.Exterior
 }
 
 sealed case class RotatedOrthogonalRectangle(
@@ -180,15 +268,38 @@ extends Rectangle {
   override def rotate(angle: AnyRadians, pivot: Vector):
   Rectangle = arbitraryDiagonalAndCorner.rotate(angle, pivot)
 
-  object perimeter extends Rectangle.Perimeter with Self {
+  override def pad(padding: Double): RotatedOrthogonalRectangle =
+  copy(orthogonal = orthogonal.pad(padding))
+
+  override val perimeter = RotatedOrthogonalRectangle.Perimeter(this)
+
+  override val interior = RotatedOrthogonalRectangle.Interior(this)
+
+  override val exterior = RotatedOrthogonalRectangle.Exterior(this)
+}
+
+object RotatedOrthogonalRectangle {
+
+  sealed case class Perimeter(rectangle: RotatedOrthogonalRectangle)
+  extends Rectangle.Perimeter {
+
+    import rectangle._
 
     override def length = orthogonal.perimeter.length
   }
 
-  object interior extends Rectangle.Interior with Self {
+  sealed case class Interior(rectangle: RotatedOrthogonalRectangle)
+  extends Rectangle.Interior {
+
+    import rectangle._
 
     override def area: Double = orthogonal.interior.area
+
+    override def area(newArea: Double): RotatedOrthogonalRectangle.Interior =
+    rectangle.copy(orthogonal = orthogonal.interior.area(newArea).rectangle)
+    .interior
   }
 
-  object exterior extends Rectangle.Exterior with Self
+  sealed case class Exterior(rectangle: RotatedOrthogonalRectangle)
+  extends Rectangle.Exterior
 }

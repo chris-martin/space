@@ -66,7 +66,7 @@ sealed case class CartesianVector(x: Double, y: Double) extends Vector {
 
   override def toCartesian: CartesianVector = this
 
-  override def magnitude: Double = (x.square + y.square).squareRoot
+  override def magnitude: Double = sqrt(x.square + y.square)
 
   override def angle: CircleRadians = CircleRadians(x=x, y=y)
 

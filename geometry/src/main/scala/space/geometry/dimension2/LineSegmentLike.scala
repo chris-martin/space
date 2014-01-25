@@ -54,6 +54,14 @@ trait LineSegment extends LineSegmentLike {
   rotate(angle, midpoint)
 
   override def rotate(angle: AnyRadians, pivot: Vector): LineSegment
+
+  /** A double ray lying on the same line as this segment, with its pivot
+    * at this segment's midpoint.
+    */
+  def toDoubleRay: DoubleRay = PointAndSemicircleAngle(midpoint, angle)
+
+  def withLength(newLength: Double): LineSegment =
+  toDoubleRay.toLineSegment(newLength)
 }
 
 object LineSegment {
@@ -122,6 +130,8 @@ trait RaySegment extends LineSegmentLike { self =>
   def toPointDifference: PointDifference = PointDifference(source, difference)
 
   def toSeq: Seq[Vector] = Seq(source, destination)
+
+  def toTuple: (Vector, Vector) = (source, destination)
 }
 
 object RaySegment {

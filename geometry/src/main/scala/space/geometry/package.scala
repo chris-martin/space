@@ -6,11 +6,11 @@ package object geometry {
 
   val twoPi = 2 * Pi
 
+  val sqrt = math.sqrt _
+
   implicit class DoubleEnrichedForGeometry(val x: Double) extends AnyVal {
 
     def square: Double = x * x
-
-    def squareRoot: Double = math.sqrt(x)
   }
 
   implicit val DoubleApproximation = space.approximation.DoubleApproximation

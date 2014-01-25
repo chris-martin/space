@@ -48,7 +48,7 @@ trait SampleOps {
       */
     def sample()(implicit random: Random): Vector = {
       val (r1, r2) = (random.nextDouble(), random.nextDouble())
-      (1-r1.squareRoot)*a + r1.squareRoot*(1-r2)*b + r1.squareRoot*r2*c
+      sqrt(1-r1)*a + sqrt(r1)*(1-r2)*b + sqrt(r1)*r2*c
     }
   }
 

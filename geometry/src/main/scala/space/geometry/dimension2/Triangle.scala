@@ -16,10 +16,6 @@ trait Triangle { self =>
   def interior: Triangle.Interior
 
   def exterior: Triangle.Exterior
-
-  protected trait Self extends Triangle.Has {
-    override def triangle: Triangle = self
-  }
 }
 
 object Triangle {
@@ -53,12 +49,12 @@ object Triangle {
 }
 
 sealed case class ThreePoints(a: Vector, b: Vector, c: Vector) extends
-Triangle { self =>
+Triangle {
 
   override def arbitrarilyDirected: ThreePoints = this
 
   override def directed(direction: RotationDirection) =
-  if (direction == self.direction) this else reverse
+  if (direction == this.direction) this else reverse
 
   def direction: RotationDirection = ???
 
@@ -77,7 +73,19 @@ Triangle { self =>
     case None => edges.maxBy(_.length).circumcircle
   }
 
-  object perimeter extends Triangle.Perimeter with Self {
+  override val perimeter = ThreePoints.Perimeter(this)
+
+  override val interior = ThreePoints.Interior(this)
+
+  override val exterior = ThreePoints.Exterior(this)
+}
+
+object ThreePoints {
+
+  sealed case class Perimeter(triangle: ThreePoints)
+  extends Triangle.Perimeter {
+
+    import triangle._
 
     override def length: Double = edges.map(_.length).sum
 
@@ -87,10 +95,12 @@ Triangle { self =>
     }
   }
 
-  object interior extends Triangle.Interior with Self {
+  sealed case class Interior(triangle: ThreePoints) extends Triangle.Interior {
+
+    import triangle._
 
     override def area: Double = (a→b).length * ((a→b).toLine → c).length / 2
   }
 
-  object exterior extends Triangle.Exterior with Self
+  sealed case class Exterior(triangle: ThreePoints) extends Triangle.Exterior
 }

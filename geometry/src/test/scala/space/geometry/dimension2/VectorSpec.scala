@@ -19,7 +19,7 @@ with space.approximation.testing.ApproximationTesting {
     { assert ( xy(3, 4).magnitude =~ 5 ) }
 
     "It calculates its angle." in
-    { val x = xy(0.5, -(3.squareRoot/2))
+    { val x = xy(0.5, -sqrt(3)/2)
       assert ( x.angle =~ CircleRadians(5*math.Pi/3) ) }
 
     "Its angle is invariant under change in magnitude." in
@@ -56,12 +56,12 @@ with space.approximation.testing.ApproximationTesting {
     val v = PolarVector(_, _)
     
     "It equals an identical polar vector." in
-    { val m = 2.squareRoot
+    { val m = sqrt(2)
       val a = Radians(Pi/4)
       assert ( v(m, a) =~ v(m, a) ) }
     
     "It equals itself rotated by 2 Pi." in
-    { val x = v(2.squareRoot, Radians(Pi/4))
+    { val x = v(sqrt(2), Radians(Pi/4))
       assert ( x =~ x.rotate(Radians(2*Pi)) ) }
     
     "It does not equal a polar vector with a different magnitude" in
@@ -69,17 +69,17 @@ with space.approximation.testing.ApproximationTesting {
       assert ( v(1, a) !=~ v(2, a) ) }
     
     "It does not equal a polar vector with a different angle" in
-    { val m = 2.squareRoot
+    { val m = sqrt(2)
       assert ( v(m, Radians(Pi/4)) !=~ v(m, Radians(Pi/3)) ) }
     
     "It calculates its X value." in
-    { assert ( v(2.squareRoot, Radians(Pi/4)).x =~ 1 ) }
+    { assert ( v(sqrt(2), Radians(Pi/4)).x =~ 1 ) }
     
     "It calculates its Y value." in
-    { assert ( v(2.squareRoot, Radians(Pi/4)).y =~ 1 ) }
+    { assert ( v(sqrt(2), Radians(Pi/4)).y =~ 1 ) }
     
     "It can be negated." in
-    { val m = 2.squareRoot
+    { val m = sqrt(2)
       assert ( -v(m, Radians(Pi/4)) =~ v(m, Radians(-3*Pi/4)) ) }
   }
 }

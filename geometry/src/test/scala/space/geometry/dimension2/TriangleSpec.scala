@@ -15,7 +15,7 @@ with space.approximation.testing.ApproximationTesting {
 
     "It calculates the length of its perimeter" in
     { assert ( △(Origin, xy(0, 1), xy(1, 0)).perimeter.length
-      =~ 2 + 2.squareRoot ) }
+      =~ 2 + sqrt(2) ) }
 
     "It calculates the area of its interior" in
     { assert ( △(Origin, xy(0, 1), xy(1, 0)).interior.area =~ .5 ) }
