@@ -70,6 +70,9 @@ object AnyRadians extends AnyRadiansCompanion {
 
   implicit def toSemicircle(x: AnyRadians): SemicircleRadians =
     SemicircleRadians(x.toDouble)
+
+  implicit def toQuarterCircle(x: AnyRadians): QuarterCircleRadians =
+    QuarterCircleRadians(x.toDouble)
 }
 
 /** @param toDouble in the range [-Pi, Pi)
@@ -99,6 +102,9 @@ object CircleRadians extends RadiansCompanion[CircleRadians] {
 
   implicit def toSemicircle(x: CircleRadians): SemicircleRadians =
     SemicircleRadians(x.toDouble)
+
+  implicit def toQuarterCircle(x: CircleRadians): QuarterCircleRadians =
+    QuarterCircleRadians(x.toDouble)
 }
 
 /** @param toDouble in the range [0, Pi)
@@ -134,6 +140,36 @@ object SemicircleRadians extends RadiansCompanion[SemicircleRadians] {
 
   def apply(x: Double, y: Double): SemicircleRadians =
     SemicircleRadians(math.atan2(y, x))
+
+  implicit def toQuarterCircle(x: SemicircleRadians): QuarterCircleRadians =
+    QuarterCircleRadians(x.toDouble)
+}
+
+/** @param toDouble in the range [0, Pi/2)
+  */
+class QuarterCircleRadians private (val toDouble: Double) extends AnyVal
+with GenRadians[QuarterCircleRadians] {
+
+  def toSemicircleRadiansArbitrarily: SemicircleRadians =
+    SemicircleRadians(toDouble)
+
+  def toCircleRadiansArbitrarily: CircleRadians = CircleRadians(toDouble)
+
+  def toAnyRadiansArbitrarily: AnyRadians = AnyRadians(toDouble)
+
+  override protected def companion: RadiansCompanion[QuarterCircleRadians] =
+    QuarterCircleRadians
+
+  override def toString = s"QuarterCircleRadians($toDouble)"
+}
+
+object QuarterCircleRadians extends RadiansCompanion[QuarterCircleRadians] {
+
+  override def apply(a: Double): QuarterCircleRadians =
+    new QuarterCircleRadians({
+      val b = a % (Pi/2)
+      if (b < 0) b + (Pi/2) else b
+    })
 }
 
 /** An angle that is a multiple of Pi/2.
