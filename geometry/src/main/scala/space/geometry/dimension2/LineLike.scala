@@ -13,7 +13,7 @@ trait LineLike {
 
   def arbitraryRaySegment: RaySegment
 
-  def ∩(that: LineLike): Option[Vector] =
+  def ∩(that: LineLike): Option[Point] =
     RaySegment.lineIntersection(
       this.arbitraryRaySegment,
       that.arbitraryRaySegment
@@ -22,7 +22,7 @@ trait LineLike {
   /** The point `b` on this line that minimizes the distance
     * between `a` and `b`.
     */
-  def pointClosestTo(a: Vector): Vector =
+  def pointClosestTo(a: Point): Point =
     ( this ∩ PointAndSemicircleAngle(a, angle.orthogonal) ).get
 
 }
@@ -48,7 +48,7 @@ trait Line extends LineLike {
 
 object Line {
 
-  def apply(a: Vector, b: Vector): Line = LineSegment(a, b).toLine
+  def apply(a: Point, b: Point): Line = LineSegment(a, b).toLine
 }
 
 /** A line, and a point (the "pivot") on that line.
@@ -57,7 +57,7 @@ object Line {
   */
 trait DoubleRay extends LineLike { self =>
 
-  def pivot: Vector
+  def pivot: Point
 
   def directed(angleSign: Sign): Ray =
     Ray(pivot, angle.toCircleRadians(angleSign))
@@ -90,11 +90,11 @@ trait DoubleRay extends LineLike { self =>
 
 object DoubleRay {
 
-  def apply(pivot: Vector, angle: SemicircleRadians): PointAndSemicircleAngle =
+  def apply(pivot: Point, angle: SemicircleRadians): PointAndSemicircleAngle =
     PointAndSemicircleAngle(pivot, angle)
 }
 
-sealed case class PointAndSemicircleAngle(pivot: Vector,
+sealed case class PointAndSemicircleAngle(pivot: Point,
     angle: SemicircleRadians) extends DoubleRay {
 
   override def toPointAndSemicircleAngle: PointAndSemicircleAngle = this

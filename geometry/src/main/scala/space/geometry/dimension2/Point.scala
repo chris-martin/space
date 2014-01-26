@@ -1,9 +1,9 @@
 package space.geometry
 package dimension2
 
-/** A point in the Euclidean plane.
+/** A point on the Euclidean plane.
   */
-trait Vector {
+trait Point {
 
   def x: Double
 
@@ -17,52 +17,52 @@ trait Vector {
 
   def angle: CircleRadians
 
-  def unary_- : Vector
+  def unary_- : Point
 
-  def +(that: Vector): Vector
+  def +(that: Point): Point
 
-  def -(that: Vector): Vector
+  def -(that: Point): Point
 
-  def *(s: Double): Vector
+  def *(s: Double): Point
 
-  def /(s: Double): Vector
+  def /(s: Double): Point
 
   /** Cross product.
     */
-  def cross(that: Vector): Double =
+  def cross(that: Point): Double =
     this ⋅ that.rotate(RightAngle.quarterCircle)
 
-  def ×(that: Vector): Double = this cross that
+  def ×(that: Point): Double = this cross that
 
   /** Scalar (dot) product.
     */
-  def dot(that: Vector): Double = x * that.x + y * that.y
+  def dot(that: Point): Double = x * that.x + y * that.y
 
-  def ⋅(that: Vector): Double = this dot that
-
-  /** Rotation about the origin.
-    */
-  def rotate(a: AnyRadians): Vector
+  def ⋅(that: Point): Double = this dot that
 
   /** Rotation about the origin.
     */
-  def rotate(a: RightAngle): Vector
+  def rotate(a: AnyRadians): Point
+
+  /** Rotation about the origin.
+    */
+  def rotate(a: RightAngle): Point
 
   /** Rotation about a pivot.
     */
-  def rotate(a: AnyRadians, pivot: Vector): Vector
+  def rotate(a: AnyRadians, pivot: Point): Point
 
   /** Rotation about a pivot.
     */
-  def rotate(a: RightAngle, pivot: Vector): Vector
+  def rotate(a: RightAngle, pivot: Point): Point
 
-  def reflect(pivot: LineLike): Vector =
+  def reflect(pivot: LineLike): Point =
     this + 2 * (this → pivot).difference
 }
 
-/** A two-dimensional vector defined by X and Y coordinates.
+/** A point on the Euclidean plane defined by `x` and `y` coordinates.
   */
-sealed case class CartesianVector(x: Double, y: Double) extends Vector {
+sealed case class CartesianVector(x: Double, y: Double) extends Point {
 
   override def toCartesian: CartesianVector = this
 
@@ -72,10 +72,10 @@ sealed case class CartesianVector(x: Double, y: Double) extends Vector {
 
   override def unary_- : CartesianVector = CartesianVector ( -x, -y )
 
-  override def +(that: Vector): CartesianVector =
+  override def +(that: Point): CartesianVector =
     CartesianVector ( x + that.x, y + that.y )
 
-  override def -(that: Vector): CartesianVector =
+  override def -(that: Point): CartesianVector =
     CartesianVector ( x - that.x, y - that.y )
 
   override def *(s: Double): CartesianVector = new CartesianVector ( x*s, y*s )
@@ -92,15 +92,15 @@ sealed case class CartesianVector(x: Double, y: Double) extends Vector {
       case RightAngle.zero => this
     }
 
-  override def rotate(a: AnyRadians, pivot: Vector): Vector =
+  override def rotate(a: AnyRadians, pivot: Point): Point =
     (this - pivot).rotate(a) + pivot
 
-  override def rotate(a: RightAngle, pivot: Vector): CartesianVector =
+  override def rotate(a: RightAngle, pivot: Point): CartesianVector =
     (this - pivot).rotate(a) + pivot
 }
 
 case class PolarVector(magnitude: Double, angle: CircleRadians)
-    extends Vector {
+    extends Point {
 
   override def toPolar: PolarVector = this
 
@@ -111,9 +111,9 @@ case class PolarVector(magnitude: Double, angle: CircleRadians)
   override def unary_- : PolarVector =
     PolarVector(magnitude, angle + Radians.halfCircle)
 
-  override def +(that: Vector): CartesianVector = toCartesian + that
+  override def +(that: Point): CartesianVector = toCartesian + that
 
-  override def -(that: Vector): CartesianVector = toCartesian - that
+  override def -(that: Point): CartesianVector = toCartesian - that
 
   override def *(s: Double): PolarVector = PolarVector(magnitude * s, angle)
 
@@ -122,16 +122,16 @@ case class PolarVector(magnitude: Double, angle: CircleRadians)
   override def rotate(a: AnyRadians): PolarVector =
     PolarVector(magnitude, angle + a)
 
-  override def rotate(a: AnyRadians, pivot: Vector): Vector =
+  override def rotate(a: AnyRadians, pivot: Point): Point =
     toCartesian.rotate(a, pivot)
 
   override def rotate(a: RightAngle): PolarVector = rotate(a.toRadians)
 
-  override def rotate(a: RightAngle, pivot: Vector) =
+  override def rotate(a: RightAngle, pivot: Point) =
     rotate(a.toRadians, pivot)
 }
 
-object Origin extends Vector {
+object Origin extends Point {
 
   override def x: Double = 0
 
@@ -148,9 +148,9 @@ object Origin extends Vector {
 
   override def unary_- : this.type = this
 
-  override def +(that: Vector): Vector = that
+  override def +(that: Point): Point = that
 
-  override def -(that: Vector): Vector = -that
+  override def -(that: Point): Point = -that
 
   override def *(s: Double): this.type = this
 
@@ -158,11 +158,11 @@ object Origin extends Vector {
 
   override def rotate(a: AnyRadians): this.type = this
 
-  override def rotate(a: AnyRadians, pivot: Vector): Vector =
+  override def rotate(a: AnyRadians, pivot: Point): Point =
     toCartesian.rotate(a, pivot)
 
   override def rotate(a: RightAngle): this.type = this
 
-  override def rotate(a: RightAngle, pivot: Vector) =
+  override def rotate(a: RightAngle, pivot: Point) =
     toCartesian.rotate(a, pivot)
 }

@@ -7,7 +7,7 @@ package dimension2
   */
 trait Ray {
 
-  def source: Vector
+  def source: Point
 
   def angle: CircleRadians
 
@@ -35,20 +35,20 @@ trait Ray {
   /** If you walk the line on which this ray lies, in the direction
     * in which the ray points, do you see `x` on your left or your right?
     */
-  def side(x: Vector): Side
+  def side(x: Point): Side
 }
 
 object Ray {
 
-  def apply(source: Vector, angle: CircleRadians): PointAndCircleAngle =
+  def apply(source: Point, angle: CircleRadians): PointAndCircleAngle =
     PointAndCircleAngle(source, angle)
 }
 
-sealed case class PointAndCircleAngle(source: Vector, angle: CircleRadians)
+sealed case class PointAndCircleAngle(source: Point, angle: CircleRadians)
     extends Ray {
 
   override def toPointAndCircleAngle: PointAndCircleAngle = this
 
-  override def side(x: Vector): Side =
+  override def side(x: Point): Side =
     if (((x - source) cross arbitrarySegment.difference) > 0) Left else Right
 }

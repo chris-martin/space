@@ -9,7 +9,7 @@ trait LineSegmentLike {
 
   def length: Double
 
-  def midpoint: Vector
+  def midpoint: Point
 
   def angle: Radians
 
@@ -33,7 +33,7 @@ trait LineSegmentLike {
 
   /** Rotation about a pivot.
     */
-  def rotate(angle: AnyRadians, pivot: Vector): LineSegmentLike
+  def rotate(angle: AnyRadians, pivot: Point): LineSegmentLike
 }
 
 /** A line segment.
@@ -44,7 +44,7 @@ trait LineSegment extends LineSegmentLike {
 
   override def angle: SemicircleRadians
 
-  override def midpoint: Vector = arbitrarilyDirected.midpoint
+  override def midpoint: Point = arbitrarilyDirected.midpoint
 
   def directed(angleSign: Sign): RaySegment
 
@@ -53,7 +53,7 @@ trait LineSegment extends LineSegmentLike {
   override def rotate(angle: AnyRadians): LineSegment =
     rotate(angle, midpoint)
 
-  override def rotate(angle: AnyRadians, pivot: Vector): LineSegment
+  override def rotate(angle: AnyRadians, pivot: Point): LineSegment
 
   /** A double ray lying on the same line as this segment, with its pivot
     * at this segment's midpoint.
@@ -66,7 +66,7 @@ trait LineSegment extends LineSegmentLike {
 
 object LineSegment {
 
-  def apply(a: Vector, b: Vector): LineSegment =
+  def apply(a: Point, b: Point): LineSegment =
     TwoPoints(a, b).toLineSegment
 }
 
@@ -74,9 +74,9 @@ object LineSegment {
   */
 trait RaySegment extends LineSegmentLike { self =>
 
-  def source: Vector
+  def source: Point
 
-  def destination: Vector
+  def destination: Point
 
   def reverse: RaySegment
 
@@ -84,9 +84,9 @@ trait RaySegment extends LineSegmentLike { self =>
 
   override def length: Double = difference.magnitude
 
-  def difference: Vector
+  def difference: Point
 
-  override def midpoint: Vector = source + difference/2
+  override def midpoint: Point = source + difference/2
 
   def toRay: Ray = Ray(source, angle)
 
@@ -95,7 +95,7 @@ trait RaySegment extends LineSegmentLike { self =>
   override def rotate(angle: AnyRadians): RaySegment =
     rotate(angle, midpoint)
 
-  override def rotate(angle: AnyRadians, pivot: Vector): RaySegment
+  override def rotate(angle: AnyRadians, pivot: Point): RaySegment
 
   def toLineSegment: LineSegment = new LineSegment {
 
@@ -108,7 +108,7 @@ trait RaySegment extends LineSegmentLike { self =>
 
     override def toLine: Line = self.toLine
 
-    override def rotate(angle: AnyRadians, pivot: Vector): LineSegment =
+    override def rotate(angle: AnyRadians, pivot: Point): LineSegment =
       self.rotate(angle, pivot).toLineSegment
 
     override def toString: String = s"LineSegment($self)"
@@ -129,16 +129,16 @@ trait RaySegment extends LineSegmentLike { self =>
 
   def toPointDifference: PointDifference = PointDifference(source, difference)
 
-  def toSeq: Seq[Vector] = Seq(source, destination)
+  def toSeq: Seq[Point] = Seq(source, destination)
 
-  def toTuple: (Vector, Vector) = (source, destination)
+  def toTuple: (Point, Point) = (source, destination)
 }
 
 object RaySegment {
 
-  def apply(a: Vector, b: Vector): RaySegment = TwoPoints(a, b)
+  def apply(a: Point, b: Point): RaySegment = TwoPoints(a, b)
 
-  def lineIntersection(ab: RaySegment, cd: RaySegment): Option[Vector] = {
+  def lineIntersection(ab: RaySegment, cd: RaySegment): Option[Point] = {
 
     val a = ab.source
     val b = ab.destination
@@ -160,30 +160,30 @@ object RaySegment {
   }
 }
 
-sealed case class TwoPoints(source: Vector, destination: Vector)
+sealed case class TwoPoints(source: Point, destination: Point)
     extends RaySegment {
 
   override def toTwoPoints: TwoPoints = this
 
-  override def difference: Vector = destination - source
+  override def difference: Point = destination - source
 
   override def reverse: TwoPoints =
     TwoPoints(source = destination, destination = source)
 
-  override def rotate(angle: AnyRadians, pivot: Vector): TwoPoints =
+  override def rotate(angle: AnyRadians, pivot: Point): TwoPoints =
     TwoPoints(source.rotate(angle, pivot), destination.rotate(angle, pivot))
 }
 
-sealed case class PointDifference(source: Vector, difference: Vector)
+sealed case class PointDifference(source: Point, difference: Point)
     extends RaySegment {
 
   override def toPointDifference: PointDifference = this
 
-  override def destination: Vector = source + difference
+  override def destination: Point = source + difference
 
   override def reverse: PointDifference =
     PointDifference(destination, -difference)
 
-  override def rotate(angle: AnyRadians, pivot: Vector): PointDifference =
+  override def rotate(angle: AnyRadians, pivot: Point): PointDifference =
     PointDifference(source.rotate(angle, pivot), difference.rotate(angle))
 }

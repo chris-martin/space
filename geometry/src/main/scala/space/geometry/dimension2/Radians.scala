@@ -10,7 +10,7 @@ package dimension2
   */
 object Radians extends AnyRadiansCompanion {
 
-  def apply(a: Vector, b: Vector, c: Vector): SemicircleRadians = {
+  def apply(a: Point, b: Point, c: Point): SemicircleRadians = {
     val A = (b → c).length
     val B = (c → a).length
     val C = (a → b).length

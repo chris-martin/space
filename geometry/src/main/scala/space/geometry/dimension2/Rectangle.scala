@@ -3,7 +3,7 @@ package dimension2
 
 trait Rectangle {
 
-  def center: Vector
+  def center: Point
 
   def arbitraryDiagonal: LineSegment
 
@@ -15,7 +15,7 @@ trait Rectangle {
 
   /** Rotation about a pivot.
     */
-  def rotate(angle: AnyRadians, pivot: Vector): Rectangle
+  def rotate(angle: AnyRadians, pivot: Point): Rectangle
 
   def pad(padding: Double): Rectangle
 
@@ -79,9 +79,9 @@ object Rectangle {
 }
 
 sealed case class DiagonalAndCornerRectangle(
-    diagonal: LineSegment, corner: Vector) extends Rectangle {
+    diagonal: LineSegment, corner: Point) extends Rectangle {
 
-  override def center: Vector = diagonal.midpoint
+  override def center: Point = diagonal.midpoint
 
   override def arbitraryDiagonal: LineSegment = diagonal
 
@@ -94,14 +94,14 @@ sealed case class DiagonalAndCornerRectangle(
       corner = corner.rotate(angle, center)
     )
 
-  override def rotate(angle: AnyRadians, pivot: Vector):
+  override def rotate(angle: AnyRadians, pivot: Point):
       DiagonalAndCornerRectangle =
     DiagonalAndCornerRectangle(
       diagonal = diagonal.rotate(angle, pivot),
       corner = corner.rotate(angle, pivot)
     )
 
-  def otherCorner: Vector = corner rotate (Radians.halfCircle, center)
+  def otherCorner: Point = corner rotate (Radians.halfCircle, center)
 
   def flipCorner: DiagonalAndCornerRectangle =
     DiagonalAndCornerRectangle(diagonal, otherCorner)
@@ -158,7 +158,7 @@ object DiagonalAndCornerRectangle {
       extends Rectangle.Exterior
 }
 
-sealed case class OrthogonalRectangle(center: Vector,
+sealed case class OrthogonalRectangle(center: Point,
     sizeX: Double, sizeY: Double) extends Rectangle {
 
   require(sizeX >= 0)
@@ -185,7 +185,7 @@ sealed case class OrthogonalRectangle(center: Vector,
   override def rotate(angle: AnyRadians): RotatedOrthogonalRectangle =
     RotatedOrthogonalRectangle(this, angle)
 
-  override def rotate(angle: AnyRadians, pivot: Vector): Rectangle =
+  override def rotate(angle: AnyRadians, pivot: Point): Rectangle =
     arbitraryDiagonalAndCorner.rotate(angle, pivot)
 
   override def pad(padding: Double): OrthogonalRectangle =
@@ -203,7 +203,7 @@ sealed case class OrthogonalRectangle(center: Vector,
 
 object OrthogonalRectangle {
 
-  def apply(c1: Vector, c2: Vector): OrthogonalRectangle =
+  def apply(c1: Point, c2: Point): OrthogonalRectangle =
     OrthogonalRectangle(
       center = (c1->c2).midpoint,
       sizeX = math.abs(c1.x - c2.x),
@@ -263,7 +263,7 @@ sealed case class RotatedOrthogonalRectangle(
     orthogonal: OrthogonalRectangle, angle: SemicircleRadians)
     extends Rectangle {
 
-  override def center: Vector = orthogonal.center
+  override def center: Point = orthogonal.center
 
   override def arbitraryDiagonal: LineSegment =
     orthogonal.arbitraryDiagonal.rotate(angle.toAnyRadiansArbitrarily)
@@ -274,7 +274,7 @@ sealed case class RotatedOrthogonalRectangle(
   override def rotate(angle: AnyRadians): RotatedOrthogonalRectangle =
     RotatedOrthogonalRectangle(orthogonal, this.angle + angle)
 
-  override def rotate(angle: AnyRadians, pivot: Vector): Rectangle =
+  override def rotate(angle: AnyRadians, pivot: Point): Rectangle =
     arbitraryDiagonalAndCorner.rotate(angle, pivot)
 
   override def pad(padding: Double): RotatedOrthogonalRectangle =

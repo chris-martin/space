@@ -35,9 +35,9 @@ trait Approximations {
       $(a, b)(_.magnitude) && $(a, b)(_.angle)
   }
 
-  implicit object VectorApproximation extends Approximation[Vector] {
+  implicit object PointApproximation extends Approximation[Point] {
 
-    override def apply(a: Vector, b: Vector)
+    override def apply(a: Point, b: Point)
         (implicit tolerance: Tolerance): Boolean = $(a, b)(_.toCartesian)
   }
 

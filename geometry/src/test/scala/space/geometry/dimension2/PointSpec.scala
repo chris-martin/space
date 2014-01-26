@@ -1,7 +1,7 @@
 package space.geometry
 package dimension2
 
-class VectorSpec extends org.scalatest.FreeSpec
+class PointSpec extends org.scalatest.FreeSpec
     with space.approximation.testing.ApproximationTesting {
 
   "CartesianVector" - {
@@ -41,7 +41,7 @@ class VectorSpec extends org.scalatest.FreeSpec
     "Its magnitude can be divided by a scalar." in
       assert ( xy(3, 4) / 2 =~ xy(1.5, 2) )
 
-    "It can be rotated about another vector." in
+    "It can be rotated about another point." in
       assert ( xy(1, 1).rotate(-Radians.quarterCircle, xy(2, 2)) =~ xy(1, 3))
 
     "It can be reflected across a line." - {
