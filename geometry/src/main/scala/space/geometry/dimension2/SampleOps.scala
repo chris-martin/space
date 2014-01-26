@@ -64,7 +64,7 @@ trait SampleOps {
              rectangle.perimeter.left.sample().y)
 
         case rectangle =>
-          var t = rectangle.arbitraryDiagonalAndCorner
+          var t = rectangle.arbitraryDiagonalAndCornerRectangle
           if (random.nextBoolean()) t = t.flipCorner
           t.interior.sample
       }

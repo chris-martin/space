@@ -7,7 +7,7 @@ trait Rectangle {
 
   def arbitraryDiagonal: LineSegment
 
-  def arbitraryDiagonalAndCorner: DiagonalAndCornerRectangle
+  def arbitraryDiagonalAndCornerRectangle: DiagonalAndCornerRectangle
 
   /** Rotation about the center.
     */
@@ -47,27 +47,27 @@ object Rectangle {
     /** The interior of a rectangle that has the same center and proportions
       * as this one, scaled to an area of `newArea`.
       */
-    def area(newArea: Double): Interior
+    def withArea(newArea: Double): Interior
 
     /** The interior of a rectangle that has the same center and proportions
       * as this one, scaled to an area of `area + additionalArea`.
       */
-    def +(additionalArea: Double): Interior = area(area + additionalArea)
+    def +(additionalArea: Double): Interior = withArea(area + additionalArea)
 
     /** The interior of a rectangle that has the same center and proportions
       * as this one, scaled to an area of `area + removedArea`.
       */
-    def -(removedArea: Double): Interior = area(area - removedArea)
+    def -(removedArea: Double): Interior = withArea(area - removedArea)
 
     /** The interior of a rectangle that has the same center and proportions
       * as this one, scaled to an area of `area * areaFactor`.
       */
-    def *(areaFactor: Double): Interior = area(area * areaFactor)
+    def *(areaFactor: Double): Interior = withArea(area * areaFactor)
 
     /** The interior of a rectangle that has the same center and proportions
       * as this one, scaled to an area of `area / areaDivisor`.
       */
-    def /(areaDivisor: Double): Interior = area(area / areaDivisor)
+    def /(areaDivisor: Double): Interior = withArea(area / areaDivisor)
 
     override def toString: String = s"Rectangle.Interior($rectangle)"
   }
@@ -85,7 +85,7 @@ sealed case class DiagonalAndCornerRectangle(
 
   override def arbitraryDiagonal: LineSegment = diagonal
 
-  override def arbitraryDiagonalAndCorner:
+  override def arbitraryDiagonalAndCornerRectangle:
     DiagonalAndCornerRectangle = this
 
   override def rotate(angle: AnyRadians): DiagonalAndCornerRectangle =
@@ -137,7 +137,8 @@ object DiagonalAndCornerRectangle {
       2 * triangle.interior.area
     }
 
-    override def area(newArea: Double): DiagonalAndCornerRectangle.Interior = {
+    override def withArea(newArea: Double):
+        DiagonalAndCornerRectangle.Interior = {
 
       val (a, b) = {
         val (a, b) = diagonal.arbitrarilyDirected.toTuple
@@ -158,51 +159,42 @@ object DiagonalAndCornerRectangle {
       extends Rectangle.Exterior
 }
 
-sealed case class OrthogonalRectangle(center: Point,
-    sizeX: Double, sizeY: Double) extends Rectangle {
+sealed case class OrthogonalRectangle(center: Point, size: CartesianVector)
+    extends Rectangle {
 
-  require(sizeX >= 0)
-  require(sizeY >= 0)
+  require(size.x >= 0)
+  require(size.y >= 0)
 
-  private lazy val dx = sizeX / 2
-  private lazy val dy = sizeY / 2
+  private lazy val dx = size.x / 2
+  private lazy val dy = size.y / 2
 
-  def minX: Double = center.x - dx
-  def maxX: Double = center.x + dx
-  def minY: Double = center.y - dy
-  def maxY: Double = center.y + dy
+  object bound extends OrthogonalBoundingBox {
+    override def min: CartesianVector = xy( center.x - dx, center.y - dy )
+    override def max: CartesianVector = xy( center.x + dx, center.y + dy )
+  }
 
-  def left   : Double = minX
-  def right  : Double = maxX
-  def bottom : Double = minY
-  def top    : Double = maxY
+  override def arbitraryDiagonal: LineSegment = {
+    import bound._
+    LineSegment( xy(min.x, min.y), xy(max.x, max.y) )
+  }
 
-  override def arbitraryDiagonal: LineSegment =
-    LineSegment(
-      xy(center.x - dx, center.y - dy),
-      xy(center.x + dy, center.y + dy)
-    )
-
-  override def arbitraryDiagonalAndCorner: DiagonalAndCornerRectangle =
+  override def arbitraryDiagonalAndCornerRectangle:
+      DiagonalAndCornerRectangle = {
+    import bound._
     DiagonalAndCornerRectangle(
-      diagonal = LineSegment(
-        xy(center.x - dx, center.y - dy),
-        xy(center.x + dy, center.y + dy)
-      ),
-      corner = xy(center.x - dx, center.y + dy)
+      diagonal = LineSegment( xy(min.x, min.y), xy(max.x, max.y) ),
+      corner = xy(min.x, max.y)
     )
+  }
 
   override def rotate(angle: AnyRadians): RotatedOrthogonalRectangle =
     RotatedOrthogonalRectangle(this, angle)
 
   override def rotate(angle: AnyRadians, pivot: Point): Rectangle =
-    arbitraryDiagonalAndCorner.rotate(angle, pivot)
+    arbitraryDiagonalAndCornerRectangle.rotate(angle, pivot)
 
   override def pad(padding: Double): OrthogonalRectangle =
-    copy(
-      sizeX = sizeX + 2*padding,
-      sizeY = sizeY + 2*padding
-    )
+    copy(size = size + padding * xy(2, 2))
 
   override val perimeter = OrthogonalRectangle.Perimeter(this)
 
@@ -215,9 +207,11 @@ object OrthogonalRectangle {
 
   def apply(c1: Point, c2: Point): OrthogonalRectangle =
     OrthogonalRectangle(
-      center = (c1->c2).midpoint,
-      sizeX = math.abs(c1.x - c2.x),
-      sizeY = math.abs(c1.y - c2.y)
+      center = (c1 → c2).midpoint,
+      size = xy(
+        math.abs(c1.x - c2.x),
+        math.abs(c1.y - c2.y)
+      )
     )
 
   sealed case class Perimeter(rectangle: OrthogonalRectangle)
@@ -225,27 +219,12 @@ object OrthogonalRectangle {
 
     import rectangle._
 
-    override def length = 2 * (sizeX + sizeY)
+    override def length = 2 * (size.x + size.y)
 
-    def bottom: LineSegment = LineSegment(
-      xy( rectangle.left, rectangle.bottom ),
-      xy( rectangle.right, rectangle.bottom )
-    )
-
-    def top: LineSegment = LineSegment(
-      xy( rectangle.left, rectangle.top ),
-      xy( rectangle.right, rectangle.top )
-    )
-
-    def left: LineSegment = LineSegment(
-      xy( rectangle.left, rectangle.top ),
-      xy( rectangle.left, rectangle.bottom )
-    )
-
-    def right: LineSegment = LineSegment(
-      xy( rectangle.right, rectangle.top ),
-      xy( rectangle.right, rectangle.bottom )
-    )
+    def bottom: LineSegment = bound.edge.bottom
+    def top: LineSegment = bound.edge.top
+    def left: LineSegment = bound.edge.left
+    def right: LineSegment = bound.edge.right
   }
 
   sealed case class Interior(rectangle: OrthogonalRectangle)
@@ -253,15 +232,12 @@ object OrthogonalRectangle {
 
     import rectangle._
 
-    override def area: Double = sizeX * sizeY
+    override def area: Double = size.x * size.y
 
-    override def area(newArea: Double): OrthogonalRectangle.Interior = {
-
-      val newSizeX = sqrt( sizeX * newArea / sizeY )
-
+    override def withArea(newArea: Double): OrthogonalRectangle.Interior = {
+      val newSizeX = sqrt( size.x * newArea / size.y )
       val newSizeY = newArea / newSizeX
-
-      rectangle.copy( sizeX = newSizeX, sizeY = newSizeY ).interior
+      rectangle.copy( size = xy(newSizeX, newSizeY) ).interior
     }
   }
 
@@ -278,14 +254,16 @@ sealed case class RotatedOrthogonalRectangle(
   override def arbitraryDiagonal: LineSegment =
     orthogonal.arbitraryDiagonal.rotate(angle.toAnyRadiansArbitrarily)
 
-  override def arbitraryDiagonalAndCorner: DiagonalAndCornerRectangle =
-    orthogonal.arbitraryDiagonalAndCorner.rotate(angle.toAnyRadiansArbitrarily)
+  override def arbitraryDiagonalAndCornerRectangle:
+      DiagonalAndCornerRectangle =
+    orthogonal.arbitraryDiagonalAndCornerRectangle
+      .rotate(angle.toAnyRadiansArbitrarily)
 
   override def rotate(angle: AnyRadians): RotatedOrthogonalRectangle =
     RotatedOrthogonalRectangle(orthogonal, this.angle + angle)
 
   override def rotate(angle: AnyRadians, pivot: Point): Rectangle =
-    arbitraryDiagonalAndCorner.rotate(angle, pivot)
+    arbitraryDiagonalAndCornerRectangle.rotate(angle, pivot)
 
   override def pad(padding: Double): RotatedOrthogonalRectangle =
     copy(orthogonal = orthogonal.pad(padding))
@@ -314,9 +292,10 @@ object RotatedOrthogonalRectangle {
 
     override def area: Double = orthogonal.interior.area
 
-    override def area(newArea: Double): RotatedOrthogonalRectangle.Interior =
+    override def withArea(newArea: Double):
+        RotatedOrthogonalRectangle.Interior =
       rectangle.copy(
-        orthogonal = orthogonal.interior.area(newArea).rectangle
+        orthogonal = orthogonal.interior.withArea(newArea).rectangle
       ).interior
   }
 
