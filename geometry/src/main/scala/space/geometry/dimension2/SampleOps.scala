@@ -31,7 +31,7 @@ trait SampleOps {
 
   implicit class SamplePointOnATriangle(triangle: Triangle) {
 
-    val perimeter = triangle.arbitrarilyDirected.perimeter
+    val perimeter = triangle.arbitraryPath.perimeter
 
     def sample()(implicit random: Random): Point =
       perimeter traverse (random.nextDouble() * perimeter.length)
@@ -39,7 +39,7 @@ trait SampleOps {
 
   implicit class SamplePointInsideATriangle(interior: Triangle.Interior) {
 
-    val triangle = interior.triangle.arbitrarilyDirected
+    val triangle = interior.triangle.arbitraryPath
 
     import triangle.{a, b, c}
 
@@ -59,7 +59,7 @@ trait SampleOps {
 
       interior.rectangle match {
 
-        case rectangle: OrthogonalRectangle =>
+        case rectangle: RectangleCenterWidthAndHeight =>
           xy(rectangle.perimeter.bottom.sample().x,
              rectangle.perimeter.left.sample().y)
 

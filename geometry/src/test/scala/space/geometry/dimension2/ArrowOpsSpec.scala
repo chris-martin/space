@@ -2,21 +2,20 @@ package space.geometry
 package dimension2
 
 class ArrowOpsSpec extends org.scalatest.FreeSpec
-    with space.approximation.testing.ApproximationTesting {
+    with space.approximation.ApproximationAssertions {
 
   "The arrow between to points is a ray segment connecting the two points" in
-    assert ( (xy(1,2) → xy(5,4)) === TwoPoints(xy(1,2), xy(5,4)) )
+    assert ( (xy(1,2) → xy(5,4)) === RaySegment( xy(1,2), xy(5,4) ) )
 
   "The arrow between a point and a line is the shortest segment" - {
 
-    def test(name: String, point: Point, line: LineLike,
-        closestPoint: Point) {
+    def test(name: String, point: Point, line: LineLike, closestPoint: Point) {
 
       s"$name, point → line" in
-        assert ( (point → line) =~ (point → closestPoint) )
+        assert ( (point → line) ==~ (point → closestPoint) )
 
       s"$name, line → point" in
-        assert ( (line → point) =~ (closestPoint → point) )
+        assert ( (line → point) ==~ (closestPoint → point) )
     }
 
     test(
