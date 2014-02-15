@@ -207,7 +207,8 @@ trait OrthogonalRectangle extends Rectangle {
   override def exterior: OrthogonalRectangle.Exterior
 }
 
-object OrthogonalRectangle {
+object OrthogonalRectangle
+    extends RectangleCenterWidthAndHeightFromDiagonal {
 
   trait PerimeterOf[+A <: OrthogonalRectangle]
       extends Rectangle.PerimeterOf[A] {
@@ -290,16 +291,20 @@ sealed case class RectangleCenterWidthAndHeight(center: Point,
   override def exterior = RectangleCenterWidthAndHeight.Exterior(this)
 }
 
-object RectangleCenterWidthAndHeight {
+trait RectangleCenterWidthAndHeightFromDiagonal {
 
-  def apply(c1: Point, c2: Point): RectangleCenterWidthAndHeight =
+  def apply(diagonal: LineSegment): RectangleCenterWidthAndHeight =
     RectangleCenterWidthAndHeight(
-      center = (c1 → c2).midpoint,
-      size = xy(
-        math.abs(c1.x - c2.x),
-        math.abs(c1.y - c2.y)
-      )
+      center = diagonal.midpoint,
+      size = {
+        val (a, b) = diagonal.arbitrarilyDirected.toTuple
+        xy( math.abs(a.x - b.x), math.abs(a.y - b.y) )
+      }
     )
+}
+
+object RectangleCenterWidthAndHeight
+    extends RectangleCenterWidthAndHeightFromDiagonal {
 
   sealed case class Perimeter(polygon: RectangleCenterWidthAndHeight)
       extends OrthogonalRectangle.PerimeterOf[RectangleCenterWidthAndHeight]
