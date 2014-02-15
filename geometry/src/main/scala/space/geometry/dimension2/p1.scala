@@ -9,9 +9,9 @@ trait Point {
 
   def y: Double
 
-  def toCartesian: CartesianVector = CartesianVector(x, y)
+  def toCartesian: CartesianVector = xy( x, y )
 
-  def toPolar: PolarVector = PolarVector(magnitude, angle)
+  def toPolar: PolarVector = PolarVector( magnitude, angle )
 
   def magnitude: Double
 
@@ -30,7 +30,7 @@ trait Point {
   /** Cross product.
     */
   def cross(that: Point): Double =
-    this ⋅ that.rotate(RightAngle.quarterCircle)
+    this ⋅ (that rotate RightAngle.quarterCircle)
 
   def ×(that: Point): Double = this cross that
 
@@ -66,11 +66,11 @@ sealed case class CartesianVector(x: Double, y: Double) extends Point {
 
   override def toCartesian: CartesianVector = this
 
-  override def magnitude: Double = sqrt(x.square + y.square)
+  override def magnitude: Double = sqrt( x.square + y.square )
 
-  override def angle: CircleRadians = CircleRadians(x=x, y=y)
+  override def angle: CircleRadians = CircleRadians( x=x, y=y )
 
-  override def unary_- : CartesianVector = CartesianVector ( -x, -y )
+  override def unary_- : CartesianVector = map(-_)
 
   override def +(that: Point): CartesianVector =
     CartesianVector ( x + that.x, y + that.y )
@@ -78,25 +78,27 @@ sealed case class CartesianVector(x: Double, y: Double) extends Point {
   override def -(that: Point): CartesianVector =
     CartesianVector ( x - that.x, y - that.y )
 
-  override def *(s: Double): CartesianVector = new CartesianVector ( x*s, y*s )
+  override def *(s: Double): CartesianVector = map(_ * s)
 
-  override def /(s: Double): CartesianVector = new CartesianVector ( x/s, y/s )
+  override def /(s: Double): CartesianVector = map(_ / s)
 
   override def rotate(a: AnyRadians): PolarVector = toPolar rotate a
 
-  override def rotate(a: RightAngle): CartesianVector =
-    a match {
-      case RightAngle.quarterCircle => xy(-y, x)
-      case RightAngle.halfCircle => xy(-x, -y)
-      case RightAngle.threeQuarterCircle => xy(y, -x)
-      case RightAngle.zero => this
-    }
+  override def rotate(a: RightAngle): CartesianVector = a match {
+    case RightAngle.quarterCircle      => xy( -y,  x )
+    case RightAngle.halfCircle         => xy( -x, -y )
+    case RightAngle.threeQuarterCircle => xy(  y, -x )
+    case RightAngle.zero => this
+  }
 
   override def rotate(a: AnyRadians, pivot: Point): Point =
     (this - pivot).rotate(a) + pivot
 
   override def rotate(a: RightAngle, pivot: Point): CartesianVector =
     (this - pivot).rotate(a) + pivot
+
+  def map(f: Double => Double): CartesianVector =
+    CartesianVector( f(x), f(y) )
 }
 
 case class PolarVector(magnitude: Double, angle: CircleRadians)
@@ -109,7 +111,7 @@ case class PolarVector(magnitude: Double, angle: CircleRadians)
   override def y: Double = magnitude * angle.sine
 
   override def unary_- : PolarVector =
-    PolarVector(magnitude, angle + Radians.halfCircle)
+    PolarVector( magnitude, angle + Radians.halfCircle )
 
   override def +(that: Point): CartesianVector = toCartesian + that
 
@@ -137,10 +139,10 @@ object Origin extends Point {
 
   override def y: Double = 0
 
-  override val toCartesian: CartesianVector = CartesianVector(x = 0, y = 0)
+  override val toCartesian: CartesianVector = xy( 0, 0 )
 
   override val toPolar: PolarVector =
-    PolarVector(magnitude = 0, angle = 0.radians)
+    PolarVector( magnitude = 0, angle = 0.radians )
 
   override def magnitude: Double = 0
 
@@ -159,10 +161,10 @@ object Origin extends Point {
   override def rotate(a: AnyRadians): this.type = this
 
   override def rotate(a: AnyRadians, pivot: Point): Point =
-    toCartesian.rotate(a, pivot)
+    toCartesian rotate (a, pivot)
 
   override def rotate(a: RightAngle): this.type = this
 
   override def rotate(a: RightAngle, pivot: Point) =
-    toCartesian.rotate(a, pivot)
+    toCartesian rotate (a, pivot)
 }

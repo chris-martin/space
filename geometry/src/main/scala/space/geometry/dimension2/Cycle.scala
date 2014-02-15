@@ -7,8 +7,10 @@ trait Cycle {
 
   def edges: Seq[RaySegment] = {
     val vs = vertices
-    ((vs.tail :+ vs.head) zip vs) map { case (a, b) => a → b }
+    ((vs.tail :+ vs.head) zip vs) map { case (a: Point, b: Point) => a → b }
   }
+
+  def length: Double = edges.map(_.length).sum
 }
 
 object Cycle {

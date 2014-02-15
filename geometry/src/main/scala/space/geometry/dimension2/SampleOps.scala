@@ -5,7 +5,7 @@ import scala.util.Random
 
 trait SampleOps {
 
-  implicit class SamplePointFromRaySegment(segment: RaySegment) {
+  implicit class RaySegmentSampling(segment: RaySegment) {
 
     def sample()(implicit random: Random): Point =
       segment.source + PolarVector(
@@ -14,13 +14,13 @@ trait SampleOps {
       )
   }
 
-  implicit class SamplePointFromLineSegment(segment: LineSegment) {
+  implicit class LineSegmentSampling(segment: LineSegment) {
 
     def sample()(implicit random: Random): Point =
       segment.arbitrarilyDirected.sample()
   }
 
-  implicit class SamplePointOnACircle(circle: Circle) {
+  implicit class CircleSampling(circle: Circle) {
 
     def sample()(implicit random: Random): Point =
       circle.center + PolarVector(
@@ -29,44 +29,38 @@ trait SampleOps {
       )
   }
 
-  implicit class SamplePointOnATriangle(triangle: Triangle) {
+  implicit class TriangleSampling(triangle: Triangle) {
 
-    val perimeter = triangle.arbitraryPath.perimeter
-
-    def sample()(implicit random: Random): Point =
-      perimeter traverse (random.nextDouble() * perimeter.length)
-  }
-
-  implicit class SamplePointInsideATriangle(interior: Triangle.Interior) {
-
-    val triangle = interior.triangle.arbitraryPath
-
-    import triangle.{a, b, c}
+    def samplePerimeter()(implicit random: Random): Point =
+      triangle.arbitraryPath
+        .traverse(random.nextDouble() * triangle.perimeterLength)
 
     /** Shape Distributions (2002) by Robert Osada, Thomas Funkhouser,
       * Bernard Chazelle, David Dobkin.
       * http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.11.8333
       */
-    def sample()(implicit random: Random): Point = {
+    def sampleInterior()(implicit random: Random): Point = {
+      val path = triangle.arbitraryPath
+      import path.{a, b, c}
       val (r1, r2) = (random.nextDouble(), random.nextDouble())
       sqrt(1-r1)*a + sqrt(r1)*(1-r2)*b + sqrt(r1)*r2*c
     }
   }
 
-  implicit class SamplePointInsideARectangle(interior: Rectangle.Interior) {
+  implicit class RectangleSampling(rectangle: Rectangle) {
 
-    def sample()(implicit random: Random): Point =
+    def sampleInterior()(implicit random: Random): Point =
 
-      interior.rectangle match {
+      rectangle match {
 
-        case rectangle: RectangleCenterWidthAndHeight =>
-          xy(rectangle.perimeter.bottom.sample().x,
-             rectangle.perimeter.left.sample().y)
+        case r: RectangleCenterWidthAndHeight =>
+          xy( r.bottomEdge.sample().x,
+              r.leftEdge  .sample().y )
 
-        case rectangle =>
-          var t = rectangle.arbitraryDiagonalAndCornerRectangle
+        case r =>
+          var t = r.arbitraryDiagonalAndCornerRectangle
           if (random.nextBoolean()) t = t.flipCorner
-          t.interior.sample
+          t.sampleInterior()
       }
   }
 }

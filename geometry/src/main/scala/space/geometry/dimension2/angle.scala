@@ -11,9 +11,9 @@ package dimension2
 object Radians extends AnyRadiansCompanion {
 
   def apply(a: Point, b: Point, c: Point): SemicircleRadians = {
-    val A = (b → c).length
-    val B = (c → a).length
-    val C = (a → b).length
+    val A = distance( b, c )
+    val B = distance( c, a )
+    val C = distance( a, b )
     SemicircleRadians(math.acos((A*A + C*C - B*B) / (2*A*C)))
   }
 }

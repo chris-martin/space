@@ -17,7 +17,7 @@ class p3Spec extends org.scalatest.FreeSpec
     )
 
     "It calculates the length of its perimeter" in assert (
-      △(Origin, xy(0, 1), xy(1, 0)).perimeter.length
+      △(Origin, xy(0, 1), xy(1, 0)).perimeterLength
       ==~ 2 + sqrt(2)
     )
 

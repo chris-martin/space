@@ -61,13 +61,12 @@ trait LineSegment extends LineSegmentLike {
   def toDoubleRay: DoubleRay = PointAndSemicircleAngle(midpoint, angle)
 
   def withLength(newLength: Double): LineSegment =
-    toDoubleRay.toLineSegment(newLength)
+    toDoubleRay segmentWithLength newLength
 }
 
 object LineSegment {
 
-  def apply(a: Point, b: Point): LineSegment =
-    TwoPoints(a, b).toLineSegment
+  def apply(a: Point, b: Point): LineSegment = a -- b
 }
 
 /** {{{    ●--▸●    }}}
@@ -205,12 +204,12 @@ trait Ray {
   /** The ray segment of length `length` that has the same source and angle
     * as this ray.
     */
-  def segment(length: Double): RaySegment =
+  def segmentWithLength(length: Double): RaySegment =
     PointDifference(source, PolarVector(length, angle))
 
   /** A ray segment that has the same source as this ray.
     */
-  def arbitrarySegment: RaySegment = segment(1)
+  def arbitrarySegment: RaySegment = segmentWithLength(1)
 
   def toDoubleRay: DoubleRay = DoubleRay(source, angle)
 
@@ -231,6 +230,8 @@ object Ray {
 
   def apply(source: Point, angle: CircleRadians): PointAndCircleAngle =
     PointAndCircleAngle(source, angle)
+
+  def apply(segment: RaySegment): Ray = segment.toRay
 }
 
 sealed case class PointAndCircleAngle(source: Point, angle: CircleRadians)
@@ -306,7 +307,7 @@ trait DoubleRay extends LineLike { self =>
   def arbitrarilyDirected: Ray = directed(Positive)
 
   override def arbitraryRaySegment: RaySegment =
-    arbitrarilyDirected.segment(1)
+    arbitrarilyDirected.segmentWithLength(1)
 
   override def arbitrarySegment: LineSegment =
     arbitraryRaySegment.toLineSegment
@@ -326,7 +327,7 @@ trait DoubleRay extends LineLike { self =>
   /** A line segment lying on the same line as this ray segment, with
     * its midpoint at the ray segments pivot, having length `length`.
     */
-  def toLineSegment(length: Double): LineSegment
+  def segmentWithLength(length: Double): LineSegment
 }
 
 object DoubleRay {
@@ -343,8 +344,8 @@ sealed case class PointAndSemicircleAngle(pivot: Point,
   override def rotate(a: AnyRadians): PointAndSemicircleAngle =
     PointAndSemicircleAngle(pivot, angle + a)
 
-  override def toLineSegment(length: Double): LineSegment = {
+  override def segmentWithLength(length: Double): LineSegment = {
     val offset = PolarVector(length/2, angle.toCircleRadiansArbitrarily)
-    TwoPoints(pivot - offset, pivot + offset).toLineSegment
+    (pivot - offset) -- (pivot + offset)
   }
 }

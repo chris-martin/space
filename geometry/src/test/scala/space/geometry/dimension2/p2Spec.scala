@@ -50,7 +50,7 @@ class p2Spec extends org.scalatest.FreeSpec
           angle = (-Pi / 2).radians
         )
 
-      val segment: RaySegment = ray.segment(2)
+      val segment: RaySegment = ray.segmentWithLength(2)
 
       "with the specified length" in assert ( segment.length ==~ 2 )
 

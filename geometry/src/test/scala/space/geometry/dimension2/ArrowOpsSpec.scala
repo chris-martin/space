@@ -11,10 +11,10 @@ class ArrowOpsSpec extends org.scalatest.FreeSpec
 
     def test(name: String, point: Point, line: LineLike, closestPoint: Point) {
 
-      s"$name, point → line" in
+      s"$name, point to line" in
         assert ( (point → line) ==~ (point → closestPoint) )
 
-      s"$name, line → point" in
+      s"$name, line to point" in
         assert ( (line → point) ==~ (closestPoint → point) )
     }
 
