@@ -15,6 +15,8 @@ package object dimension2 extends Object with Approximations with SampleOps
 
     def radians: AnyRadians = AnyRadians(x)
 
+    def degrees: AnyRadians = AnyRadians(x * Pi / 180)
+
     def *(point: Point): Point = point * x
   }
 

@@ -1,11 +1,35 @@
 package space.geometry
 package dimension2
 
-import math.abs
+import math.{abs, tan, sin, cos}
 
 trait Quadrilateral extends Polygon {
 
   override def arbitraryPath: FourPoints
+}
+
+trait OrthogonalQuadrilateral {
+
+  /** A vector in the first quadrant (having nonnegative coordinates)
+    * where the `x` value is the `width` of the quad and the `y` value
+    * is the `height` of the quad.
+    */
+  def size: CartesianVector
+  
+  def width: Double
+  def height: Double
+}
+
+object OrthogonalQuadrilateral {
+  
+  trait DefinesSize extends OrthogonalQuadrilateral {
+    override def width = size.x
+    override def height = size.y
+  }
+  
+  trait DefinesWidthAndHeight extends OrthogonalQuadrilateral {
+    override def size = xy(width, height)
+  }
 }
 
 trait Rectangle extends Quadrilateral {
@@ -92,12 +116,10 @@ sealed case class DiagonalAndCornerRectangle(
     2 * diagonal.arbitrarilyDirected.toSeq.map(distance(corner, _)).sum
 }
 
-trait OrthogonalRectangle extends Rectangle {
+trait OrthogonalRectangle extends Rectangle with OrthogonalQuadrilateral {
 
   def min: CartesianVector
   def max: CartesianVector
-
-  def size: CartesianVector
 
   override def area: Double = size.x * size.y
 
@@ -119,11 +141,15 @@ trait OrthogonalRectangle extends Rectangle {
   override def arbitraryPath: FourPoints =
     Cycle( bottomLeft, bottomRight, topRight, topLeft )
 
-  override def perimeterLength: Double = 2 * (size.x + size.y)
+  override def perimeterLength: Double = 2 * (width + height)
 }
 
-sealed case class RectangleCenterWidthAndHeight(center: Point,
-    size: CartesianVector) extends OrthogonalRectangle {
+object OrthogonalRectangle
+    extends ConstructsRectangleCenterWidthAndHeightFromDiagonal
+
+sealed case class RectangleCenterWidthAndHeight(override val center: Point,
+    override val size: CartesianVector) extends OrthogonalRectangle 
+    with OrthogonalQuadrilateral.DefinesSize {
 
   require(size.x >= 0)
   require(size.y >= 0)
@@ -164,7 +190,7 @@ sealed case class RectangleCenterWidthAndHeight(center: Point,
 
 }
 
-trait RectangleCenterWidthAndHeightFromDiagonal {
+trait ConstructsRectangleCenterWidthAndHeightFromDiagonal {
 
   def apply(diagonal: LineSegment): RectangleCenterWidthAndHeight =
     RectangleCenterWidthAndHeight(
@@ -174,7 +200,7 @@ trait RectangleCenterWidthAndHeightFromDiagonal {
 }
 
 object RectangleCenterWidthAndHeight
-    extends RectangleCenterWidthAndHeightFromDiagonal
+    extends ConstructsRectangleCenterWidthAndHeightFromDiagonal
 
 sealed case class RotatedOrthogonalRectangle(
     orthogonal: RectangleCenterWidthAndHeight, angle: SemicircleRadians)
@@ -216,10 +242,134 @@ trait Rhombus extends Quadrilateral {
   def edgeLength: Double
 }
 
+/** {{{
+  *        c1
+  *       / \           c:  center
+  *      /   \          c1: corner1
+  *     /     \         c2: corner2
+  *    /   c   \c2
+  *    \       /
+  *     \     /
+  *      \   /
+  *       \ /
+  * }}}
+  */
+sealed case class CenterAndTwoCornersRhombus(
+    center: Point, corner1: Point, corner2: Point) extends Rhombus {
+
+  override def area: Double = 4 * Triangle(center, corner1, corner2).area
+
+  override def edgeLength: Double = distance(corner1, corner2)
+
+  override def arbitraryPath: FourPoints =
+    FourPoints(
+      corner1,
+      corner2,
+      corner1 + 2 * (corner1 → center).difference,
+      corner2 + 2 * (corner2 → center).difference
+    )
+}
+
+trait OrthogonalRhombus extends Rhombus with OrthogonalQuadrilateral {
+
+  /** A vector in the first quadrant (having nonnegative coordinates)
+    * where the `x` value is the width of the rhombus (the length of
+    * `horizontalDiagonal`) and the `y` value is the height of the rhombus
+    * (the length of `verticalDiagonal`).
+    */
+  override def size: CartesianVector
+  
+  def top:    Point = center + xy(0, height/2)
+  def bottom: Point = center - xy(0, height/2)
+  def left:   Point = center + xy(width/2, 0)
+  def right:  Point = center + xy(width/2, 0)
+
+  override def edgeLength: Double = distance(top, right)
+
+  /** The diagonal that is parallel to the X axis.
+    */
+  def horizonalDiagonal: LineSegment = left -- right
+
+  /** The diagonal that is parallel to the Y axis.
+    */
+  def verticalDiagonal: LineSegment = top -- bottom
+
+  /** The angle of the rhombus at corners that lie on its horizontal diagonal.
+    */
+  def horizontalDiagonalAngle: SemicircleRadians
+
+  /** The angle of the rhombus at corners that lie on its vertical diagonal.
+   */
+  def verticalDiagonalAngle: SemicircleRadians
+
+  override def area: Double =
+    horizonalDiagonal.length * verticalDiagonal.length / 2
+
+  override def arbitraryPath = FourPoints(top, right, bottom, left)
+}
+
+object OrthogonalRhombus {
+
+  def apply(center: Point, size: CartesianVector) =
+    OrthogonalRhombusBySize( center=center, size=size )
+}
+
+sealed case class OrthogonalRhombusBySize(override val center: Point,
+    override val size: CartesianVector) extends OrthogonalRhombus
+    with OrthogonalQuadrilateral.DefinesSize {
+
+  override def horizontalDiagonalAngle = ???
+  override def verticalDiagonalAngle = ???
+}
+
+trait OrthogonalRhombusByVerticalDiagonalAngle extends OrthogonalRhombus {
+
+  override def horizontalDiagonalAngle: SemicircleRadians =
+    -verticalDiagonalAngle
+}
+
+/** {{{
+  *                 _        c: center
+  *       / \        |       a: verticalDiagonalAngle
+  *      /   \       |       h: height
+  *     /     \      |                       y axis
+  *    /   c   \     | h                       |
+  *    \       /     |                         |
+  *     \  _  /      |                    -----+----- x axis
+  *      \/a\/       |                         |
+  *       \ /       _|                         |
+  * }}}
+  */
+sealed case class OrthogonalRhombusByVerticalDiagonalAngleAndHeight(
+    override val center: Point,
+    override val verticalDiagonalAngle: SemicircleRadians,
+    override val height: Double) 
+    extends OrthogonalRhombusByVerticalDiagonalAngle
+    with OrthogonalQuadrilateral.DefinesWidthAndHeight {
+
+  override lazy val width: Double =
+    height * tan(verticalDiagonalAngle.toDouble / 2)
+}
+
+sealed case class OrthogonalRhombusByVerticalDiagonalAngleAndEdgeLength(
+    override val center: Point,
+    override val verticalDiagonalAngle: SemicircleRadians,
+    override val edgeLength: Double) 
+    extends OrthogonalRhombusByVerticalDiagonalAngle
+    with OrthogonalQuadrilateral.DefinesWidthAndHeight {
+
+  override lazy val width: Double =
+    2 * edgeLength * sin(verticalDiagonalAngle.toDouble / 2)
+
+  override lazy val height: Double =
+    2 * edgeLength * cos(verticalDiagonalAngle.toDouble / 2)
+}
+
 trait Square extends Rectangle with Rhombus
 
-sealed case class OrthogonalSquare(center: Point, edgeLength: Double)
-    extends OrthogonalRectangle with Square {
+sealed case class OrthogonalSquare(override val center: Point,
+    override val edgeLength: Double) extends OrthogonalRectangle with Square
+    with OrthogonalQuadrilateral.DefinesWidthAndHeight {
 
   require(edgeLength >= 0)
 
@@ -227,7 +377,9 @@ sealed case class OrthogonalSquare(center: Point, edgeLength: Double)
 
   override def min: CartesianVector = xy( center.x - d, center.y - d )
   override def max: CartesianVector = xy( center.x + d, center.y + d )
-  override def size: CartesianVector = xy( edgeLength, edgeLength )
+
+  override def width = edgeLength
+  override def height = edgeLength
 
   override def pad(padding: Double): OrthogonalSquare =
     copy( edgeLength = edgeLength + 2 * padding )
