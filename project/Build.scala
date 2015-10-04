@@ -20,26 +20,22 @@ object Build extends Build {
 
   lazy val root = (
     project("root", ".")
-    aggregate (approximation, geometry, color)
+    aggregate (approximation, geometry, color, svg)
   )
 
   lazy val approximation = project("approximation", "approximation")
 
-  lazy val approximationTesting = (
-    project("approximation-testing", "approximation/testing")
-    dependsOn approximation
-  )
-
   lazy val geometry = (
     project("geometry", "geometry")
-    dependsOn (approximation, approximationTesting % "test")
+    dependsOn approximation
   )
 
   lazy val color = (
     project("color", "color")
-    dependsOn (approximation, approximationTesting % "test")
+    dependsOn approximation
   )
 
   lazy val jogl = project("jogl", "jogl")
 
+  lazy val svg = project("svg", "sandbox/svg") dependsOn (geometry, color)
 }
